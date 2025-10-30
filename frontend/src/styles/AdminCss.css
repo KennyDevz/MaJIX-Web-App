@@ -1,0 +1,410 @@
+/* -------------------------------------- */
+/* 1. Global & Layout */
+/* -------------------------------------- */
+body {
+    background-color: #121212; /* Dark background */
+    color: #E0E0E0; /* Light text */
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.dashboard-main-content {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.dashboard-title {
+    font-size: 1.5rem;
+    color: #9E9E9E;
+    margin-bottom: 30px;
+}
+
+/* -------------------------------------- */
+/* 2. Stats Cards (StatsCards.js) */
+/* -------------------------------------- */
+.stats-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 40px;
+}
+
+.stat-card {
+    flex: 1; /* Ensures equal width */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 10px;
+    border-radius: 8px;
+    background-color: #1F1F1F; /* Slightly lighter dark background */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: #A0A0A0;
+}
+
+/* Revenue Card Specific Style (Darkest background) */
+.revenue-card {
+    background-color: #000000;
+    color: #FFFFFF;
+}
+
+/* -------------------------------------- */
+/* 3. Product Management Header (ProductManagement.js) */
+/* -------------------------------------- */
+.product-management-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 10px 0;
+    border-bottom: 1px solid #333; /* Separator line */
+}
+
+.section-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #B0B0B0;
+    text-transform: uppercase;
+}
+
+.add-product-button {
+    /* MUI Button styles: You can replace this with the MUI <Button> component */
+    background-color: #000000;
+    color: #FFFFFF;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.add-product-button:hover {
+    background-color: #333333;
+}
+
+
+/* -------------------------------------- */
+/* 4. Product List Item (ProductListItem.js) */
+/* -------------------------------------- */
+.product-list-item {
+    display: flex;
+    align-items: center;
+    background-color: #1F1F1F;
+    padding: 15px;
+    margin-bottom: 12px;
+    border-radius: 6px;
+    transition: background-color 0.3s;
+}
+
+.product-list-item:hover {
+    background-color: #282828;
+}
+
+.product-image {
+    width: 60px;
+    height: 60px;
+    background-color: #333333; /* Placeholder background */
+    border-radius: 4px;
+    margin-right: 20px;
+    flex-shrink: 0;
+}
+
+.product-details {
+    flex-grow: 1;
+}
+
+.product-name {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 2px;
+}
+
+.product-description {
+    font-size: 0.85rem;
+    color: #A0A0A0;
+}
+
+.product-actions {
+    display: flex;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+/* MUI IconButton Customization (for the edit/delete buttons) */
+.edit-button-mui {
+    /* Overrides for MUI IconButton background */
+    color: #A0A0A0 !important;
+    background-color: #333333 !important;
+    border-radius: 4px !important;
+}
+
+.edit-button-mui:hover {
+    background-color: #444444 !important;
+    color: #FFFFFF !important;
+}
+
+.delete-button-mui {
+    /* Overrides for MUI IconButton background (Solid Red) */
+    background-color: #D32F2F !important;
+    color: #FFFFFF !important;
+    border-radius: 4px !important;
+}
+
+.delete-button-mui:hover {
+    background-color: #C62828 !important;
+}
+
+/* -------------------------------------- */
+/* 5. Load More Button */
+/* -------------------------------------- */
+.load-more-section {
+    display: flex;
+    justify-content: center;
+    padding-top: 30px;
+}
+
+.load-more-button {
+    /* Standard Button style */
+    background: none;
+    color: #A0A0A0;
+    border: 1px solid #444444;
+    padding: 10px 25px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.load-more-button:hover {
+    background-color: #1F1F1F;
+    color: #FFFFFF;
+}
+
+/* Header CSS */
+/* -------------------------------------- */
+/* 6. Header (Header.js) */
+/* -------------------------------------- */
+
+.header-container {
+    background-color: #121212; /* Dark background */
+    border-bottom: 1px solid #333;
+}
+
+/* Top Signup Bar */
+.top-signup-bar {
+    background-color: #333;
+    color: #FFF;
+    font-size: 0.8rem;
+    padding: 5px 20px;
+    display: flex;
+    justify-content: center; /* Center the text */
+    align-items: center;
+    position: relative;
+}
+
+.top-signup-bar a {
+    color: #FFF;
+    font-weight: bold;
+    text-decoration: underline;
+    margin-left: 5px;
+}
+
+.close-icon {
+    position: absolute;
+    right: 20px;
+    cursor: pointer;
+    font-size: 1.2rem;
+}
+
+/* Main Navigation Row */
+.main-nav-row {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo a {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #FFF;
+    text-decoration: none;
+    margin-right: 30px;
+}
+
+/* Navigation Links */
+.main-nav-links {
+    display: flex;
+    gap: 25px;
+    margin-left: 30px;
+}
+
+.nav-link {
+    color: #A0A0A0;
+    text-decoration: none;
+    font-size: 0.9rem;
+    padding: 5px 0;
+    transition: color 0.2s;
+}
+
+.nav-link:hover {
+    color: #FFF;
+}
+
+.nav-active {
+    color: #FFF;
+    border-bottom: 2px solid #FFF;
+}
+
+/* Search Bar */
+.search-container {
+    flex-grow: 1; /* Allows the search bar to take up available space */
+    max-width: 400px;
+    display: flex;
+    align-items: center;
+    background-color: #1F1F1F;
+    border-radius: 4px;
+    padding: 5px 10px;
+    margin: 0 40px;
+}
+
+.search-icon {
+    color: #A0A0A0;
+    margin-right: 8px;
+}
+
+.search-input {
+    background: none;
+    border: none;
+    color: #FFF;
+    padding: 5px;
+    width: 100%;
+    outline: none;
+}
+
+.search-input::placeholder {
+    color: #A0A0A0;
+}
+
+/* Icons Group (Cart, Account) */
+.icon-group {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.nav-icon {
+    color: #FFF;
+    text-decoration: none;
+    position: relative;
+    font-size: 1.2rem;
+}
+
+.cart-count {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: red;
+    color: white;
+    font-size: 0.6rem;
+    padding: 1px 4px;
+    border-radius: 50%;
+}
+
+/*Footer CSS*/
+
+/* -------------------------------------- */
+/* 7. Footer (Footer.js) */
+/* -------------------------------------- */
+
+.footer-container {
+    background-color: #000000; /* Deep black background */
+    color: #A0A0A0;
+    padding-top: 50px;
+}
+
+.footer-content {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+}
+
+.footer-section {
+    width: 25%; /* Basic column width */
+}
+
+.brand-info h3 {
+    color: #FFF;
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.brand-info p {
+    font-size: 0.85rem;
+    line-height: 1.4;
+    margin-bottom: 20px;
+}
+
+.social-icons span {
+    font-size: 1.2rem;
+    margin-right: 15px;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.social-icons span:hover {
+    color: #FFF;
+}
+
+.links-group {
+    display: flex;
+    gap: 80px;
+    width: 50%; /* Holds the Company and Help columns */
+}
+
+.link-column h4 {
+    color: #FFF;
+    font-size: 1rem;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.footer-link {
+    display: block;
+    color: #A0A0A0;
+    text-decoration: none;
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+    transition: color 0.2s;
+}
+
+.footer-link:hover {
+    color: #FFF;
+}
+
+/* Copyright Bar */
+.copyright-bar {
+    background-color: #1F1F1F;
+    text-align: center;
+    padding: 15px 20px;
+    font-size: 0.75rem;
+    color: #616161;
+    border-top: 1px solid #333;
+}
