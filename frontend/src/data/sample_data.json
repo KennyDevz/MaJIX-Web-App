@@ -1,0 +1,72 @@
+[
+  {
+    "title": "Men's Casual Shirt",
+    "name": "Blue Cotton Shirt",
+    "price": 499,
+    "rating": 4.4,
+    "image": "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "title": "Women's Floral Dress",
+    "name": "Summer Floral Dress",
+    "price": 999,
+    "rating": 4.6,
+    "image": "https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "title": "Men's Hoodie",
+    "name": "Grey Cotton Hoodie",
+    "price": 899,
+    "rating": 4.7,
+    "image": "https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "title": "Men's Denim Jacket",
+    "name": "Blue Denim Jacket",
+    "price": 1499,
+    "rating": 4.8,
+    "image": "https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "title": "Women's Red Dress",
+    "name": "Elegant Red Dress",
+    "price": 1399,
+    "rating": 4.9,
+    "image": "https://images.unsplash.com/photo-1566174053879-31528523f8ae?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "title": "Men's T-Shirt",
+    "name": "White Casual Tee",
+    "price": 399,
+    "rating": 4.5,
+    "image": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "title": "Women's Jacket",
+    "name": "Beige Coat Jacket",
+    "price": 1799,
+    "rating": 4.8,
+    "image": "https://images.unsplash.com/photo-1539533113208-f6df8cc8b543?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "title": "Men's Black Jeans",
+    "name": "Slim Fit Jeans",
+    "price": 799,
+    "rating": 4.3,
+    "image": "https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "title": "Women's Sweater",
+    "name": "Warm Knit Sweater",
+    "price": 899,
+    "rating": 4.6,
+    "image": "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "title": "Men's Polo Shirt",
+    "name": "Classic Polo",
+    "price": 699,
+    "rating": 4.2,
+    "image": "https://images.unsplash.com/photo-1586363104862-3a5e2ab60d99?auto=format&fit=crop&w=600&q=80"
+  }
+]
