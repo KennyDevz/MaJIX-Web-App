@@ -8,6 +8,8 @@ import NavBar from './components/nav_bar';
 import SignIn from './pages/sign_in';
 import SignUp from './pages/sign_up'
 import './styles/App.css';
+import Checkout from './pages/checkout';
+import ProfilePage from './pages/profile';
 
 
 function App() {
@@ -25,6 +27,8 @@ function App() {
         <Route path='/Sign-in' element={<SignIn/>}/>
         <Route path='/Sign-up' element={<SignUp/>}/>
         <Route path="/Details" element={<ProductView/>}/>
+        <Route path="/Checkout" element={<Checkout/>}/>
+        <Route path="/Profile" element={<ProfilePage/>}/>
 
         </Routes>
         

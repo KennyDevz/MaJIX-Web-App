@@ -6,37 +6,46 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 
-export default function OrderSummary() {
+// 1. Accept the new props: buttonText and onButtonClick
+export default function OrderSummary({ buttonText, onButtonClick }) {
   return (
     <Card sx={{ maxWidth: 400, padding: 2, borderRadius: 2 }}>
       <CardContent>
         <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: 2 }}>
           <ShoppingCartIcon sx={{ color: '#000000ff' }} />
-          <Typography variant="h6" sx={{ fontWeight: 'bold', marginLeft: 1, color: 'text.primary' }}>
+          <Typography 
+            variant="h6" 
+            sx={{ 
+              fontWeight: 'bold', 
+              marginLeft: 1, 
+              color: 'text.primary', 
+              fontFamily: 'Poppins' // Added font
+            }}
+          >
             Order Summary
           </Typography>
         </Box>
         
         <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: 1 }}>
-          <Typography variant="body1">Subtotal</Typography>
-          <Typography variant="body1">₱89.99</Typography>
+          <Typography  sx={{ fontFamily: 'Poppins', fontSize: '20px', color: 'rgba(0, 0, 0, 0.60)'  }}>Subtotal</Typography>
+          <Typography sx={{ fontFamily: 'Poppins', fontSize: '20px', fontWeight: '600' }}>₱89.99</Typography>
         </Box>
         
         <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: 1 }}>
-          <Typography variant="body1">Discount</Typography>
-          <Typography variant="body1">₱50.00</Typography>
+          <Typography  sx={{ fontFamily: 'Poppins', fontSize: '20px', color: 'rgba(0, 0, 0, 0.60)'  }}>Discount</Typography>
+          <Typography  sx={{ fontFamily: 'Poppins', fontSize: '20px', fontWeight: '600' }}>₱50.00</Typography>
         </Box>
         
         <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: 1 }}>
-          <Typography variant="body1">Delivery Fee</Typography>
-          <Typography variant="body1">₱15.00</Typography>
+          <Typography  sx={{ fontFamily: 'Poppins', fontSize: '20px', color: 'rgba(0, 0, 0, 0.60)'  }}>Delivery Fee</Typography>
+          <Typography  sx={{ fontFamily: 'Poppins', fontSize: '20px', fontWeight: '600'}}>₱15.00</Typography>
         </Box>
 
         <Box sx={{ borderBottom: '1px solid #e0e0e0', marginY: 2 }} />
         
         <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 2 }}>
-          <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Total</Typography>
-          <Typography variant="h6" sx={{ fontWeight: 'bold' }}>₱89.99</Typography>
+          <Typography  sx={{fontFamily: 'Poppins', fontSize: '20px', fontWeight: '400' }}>Total</Typography>
+          <Typography  sx={{ fontFamily: 'Poppins', fontSize: '24px', fontWeight: '600' }}>₱89.99</Typography>
         </Box>
 
         <Box sx={{ display: 'flex', gap: 1, marginTop: 2 }}>
@@ -44,17 +53,46 @@ export default function OrderSummary() {
             size="small"
             label="Promo code"
             variant="outlined"
-              sx={{
-              flex: 1,'& .MuiOutlinedInput-root': {borderRadius: '20px',}
-              }}
+            sx={{
+              flex: 1,
+              '& .MuiOutlinedInput-root': {
+                borderRadius: '20px',
+                fontFamily: 'Poppins'
+              },
+              '& .MuiInputLabel-root': {
+                fontFamily: 'Poppins'
+              }
+            }}
           />
-          <Button variant="contained" sx={{ backgroundColor: 'black', '&:hover': { backgroundColor: '#333'}, borderRadius: '20px' }}>
+          <Button 
+            variant="contained" 
+            sx={{ 
+              backgroundColor: 'black', 
+              '&:hover': { backgroundColor: '#333'}, 
+              borderRadius: '20px',
+              fontFamily: 'Poppins' 
+            }}
+          >
             Apply
           </Button>
         </Box>
 
-        <Button variant="contained" color="primary" fullWidth sx={{ marginTop: 3, paddingY: 1.5, borderRadius: '25px', backgroundColor: 'black', '&:hover': { backgroundColor: '#333' } }}>
-          Checkout
+        {/* 2. Use the new props for the button */}
+        <Button 
+          variant="contained" 
+          color="primary" 
+          fullWidth 
+          sx={{ 
+            marginTop: 3, 
+            paddingY: 1.5, 
+            borderRadius: '25px', 
+            backgroundColor: 'black', 
+            '&:hover': { backgroundColor: '#333' },
+            fontFamily: 'Poppins' 
+          }}
+          onClick={onButtonClick} // 3. Use the onClick prop
+        >
+          {buttonText || 'Checkout'} {/* 4. Use the buttonText prop, with a default */}
         </Button>
       </CardContent>
     </Card>
