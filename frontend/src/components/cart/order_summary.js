@@ -28,17 +28,17 @@ export default function OrderSummary({ buttonText, onButtonClick }) {
         
         <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: 1 }}>
           <Typography  sx={{ fontFamily: 'Poppins', fontSize: '20px', color: 'rgba(0, 0, 0, 0.60)'  }}>Subtotal</Typography>
-          <Typography sx={{ fontFamily: 'Poppins', fontSize: '20px', fontWeight: '600' }}>₱89.99</Typography>
+          <Typography sx={{ fontFamily: 'Poppins', fontSize: '20px', fontWeight: '500' }}>₱89.99</Typography>
         </Box>
         
         <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: 1 }}>
           <Typography  sx={{ fontFamily: 'Poppins', fontSize: '20px', color: 'rgba(0, 0, 0, 0.60)'  }}>Discount</Typography>
-          <Typography  sx={{ fontFamily: 'Poppins', fontSize: '20px', fontWeight: '600' }}>₱50.00</Typography>
+          <Typography  sx={{ fontFamily: 'Poppins', fontSize: '20px', fontWeight: '500' }}>₱50.00</Typography>
         </Box>
         
         <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: 1 }}>
           <Typography  sx={{ fontFamily: 'Poppins', fontSize: '20px', color: 'rgba(0, 0, 0, 0.60)'  }}>Delivery Fee</Typography>
-          <Typography  sx={{ fontFamily: 'Poppins', fontSize: '20px', fontWeight: '600'}}>₱15.00</Typography>
+          <Typography  sx={{ fontFamily: 'Poppins', fontSize: '20px', fontWeight: '500'}}>₱15.00</Typography>
         </Box>
 
         <Box sx={{ borderBottom: '1px solid #e0e0e0', marginY: 2 }} />

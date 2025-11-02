@@ -14,6 +14,11 @@ import {useState} from 'react';
 export default function CartItem(props) {
     const [quantity, setQuantity] = useState(1);
 
+    const formattedPrice = Number(props.price).toLocaleString("en-PH", {
+        style: "currency",
+        currency: "PHP",
+    });
+
     const handleAdd = () => {
         setQuantity(quantity + 1);
     };
@@ -25,7 +30,13 @@ export default function CartItem(props) {
 
   return (
     <div>
-      <Card sx={{ display: 'flex',width:'700px', alignItems: 'center', padding: '10px' }}>
+      <Card sx={{ 
+        display: 'flex',
+        width: '100%', // Use 100% to be responsive
+        maxWidth: '700px', // Set a max-width instead of fixed width
+        alignItems: 'center', 
+        padding: '10px' 
+      }}>
         <CardMedia 
           component="img"
           image={props.image}
@@ -34,20 +45,47 @@ export default function CartItem(props) {
         />
         <Box sx={{ display: 'flex', flex: 1, alignItems: 'center', justifyContent: 'space-between' }}>
           <CardContent sx={{ flex: 1 }}>
-            <Typography variant='h6' sx={{fontStyle:'bold', fontWeight:"700",fontSize:'20px'}}>
+            <Typography 
+              variant='h6' // Use variant for sizing
+              sx={{ 
+                fontFamily: 'Poppins', // Add font
+                fontWeight:"700" 
+              }}
+            >
                 {props.name}
             </Typography>
-            <Typography variant='subtitle1' sx={{fontStyle:'light', fontWeight:"400", fontSize:'14px'}}>
+            <Typography 
+              variant='body2' // Use variant
+              sx={{ 
+                fontFamily: 'Poppins', // Add font
+                fontWeight:"400", 
+                color: 'text.secondary' // Use theme color
+              }}
+            >
                 Size = {props.size}
             </Typography>
-            <Typography variant='subtitle1' sx={{fontStyle:'light', fontWeight:"400", fontSize:'14px'}}>
+            <Typography 
+              variant='body2' // Use variant
+              sx={{ 
+                fontFamily: 'Poppins', // Add font
+                fontWeight:"400", 
+                color: 'text.secondary' // Use theme color
+              }}
+            >
                 Color = {props.color}
             </Typography>
-            <Typography variant='subtitle1' sx={{fontStyle:'bold', fontWeight:"700",fontSize:'24px'}}>
-                ₱{props.price}
+            <Typography 
+              variant='h5' // Use variant for price
+              sx={{ 
+                fontFamily: 'Poppins', // Add font
+                fontWeight:"500", 
+                mt: 1 // Add a little margin-top
+              }}
+            >
+                {formattedPrice}
             </Typography>
           </CardContent>
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'space-between', height: '124px' }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'space-between', height: '124px', pr: 1 }}>
             {/* Remove button at the top */}
             <Button variant="text" sx={{ textTransform: 'none', color: 'text.primary', alignSelf: 'flex-end' , marginBottom:'20px'}}>
               <IconButton size="small">
@@ -59,7 +97,9 @@ export default function CartItem(props) {
               <IconButton size="small" onClick={handleRemove}>
                 <RemoveIcon />
               </IconButton>
-              <Typography variant="body1">{quantity}</Typography>
+              <Typography variant="body1" sx={{ fontFamily: 'Poppins' }}>
+                {quantity}
+              </Typography>
               <IconButton size="small" onClick={handleAdd}>
                 <AddIcon />
               </IconButton>
@@ -70,5 +110,3 @@ export default function CartItem(props) {
     </div>
   );
 }
-
-
