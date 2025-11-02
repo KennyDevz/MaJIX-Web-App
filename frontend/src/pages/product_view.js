@@ -5,6 +5,7 @@ import tshirtImage from "../assets/tshirt.jpg";
 import ProductReview from "../components/product_review";
 
 import { useEffect } from "react";
+import ReviewForm from "../components/review_form";
 
 export default function ProductView() {
   useEffect(() => { //scrolls to the top of component
@@ -15,8 +16,9 @@ export default function ProductView() {
       <BreadCrumbs page="Product View" />
       <ProductDetails image={tshirtImage}/>
       <Typography variant="h5" fontWeight="700" mt={4}>
-        Customer Reviews (2)
+        Rating & Reviews (2)
       </Typography>
+      <ReviewForm productId={123} /> {/* Pass a sample productId */}
       <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 2, width: "90%"}}>
         <ProductReview
             name="John Doe"
