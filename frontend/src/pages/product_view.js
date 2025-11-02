@@ -1,11 +1,11 @@
 import { Box, Typography } from "@mui/material";
 import BreadCrumbs from "../components/breadcrumbs";
-import ProductDetails from "../components/product_details";
+import ProductDetails from "../components/product_view/product_details";
 import tshirtImage from "../assets/tshirt.jpg"; 
-import ProductReview from "../components/product_review";
+import ProductReview from "../components/product_view/product_review";
 
 import { useEffect } from "react";
-import ReviewForm from "../components/review_form";
+import ReviewForm from "../components/product_view/review_form";
 
 export default function ProductView() {
   useEffect(() => { //scrolls to the top of component

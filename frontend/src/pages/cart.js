@@ -1,6 +1,6 @@
-import CartItem from "../components/cart_item";
+import CartItem from "../components/cart/cart_item";
 import tshirtImage from "../assets/tshirt.jpg"; 
-import OrderSummary from "../components/order_summary";
+import OrderSummary from "../components/cart/order_summary";
 import BreadCrumbs from "../components/breadcrumbs";
 import { Box } from "@mui/material";
 import { useNavigate } from 'react-router-dom';
