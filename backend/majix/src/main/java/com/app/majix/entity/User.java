@@ -8,7 +8,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long UserId;
+    private Long UserId; //rename to "id" later for clarity
     private String email;
     private String password;
     private String firstname;
