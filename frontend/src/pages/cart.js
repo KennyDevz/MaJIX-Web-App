@@ -3,11 +3,13 @@ import tshirtImage from "../assets/tshirt.jpg";
 import OrderSummary from "../components/cart/order_summary";
 import BreadCrumbs from "../components/breadcrumbs";
 import { Box } from "@mui/material";
-import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useNavigate} from 'react-router-dom';
+import { useEffect, useContext  } from 'react';
+import { UserContext } from "../context/UserContext";
 
 export default function Cart() {
   const navigate = useNavigate();
+  const { user } = useContext(UserContext);
 
   // Scroll to top on page load
   useEffect(() => {
@@ -19,9 +21,10 @@ export default function Cart() {
     navigate('/checkout');
   };
 
-  return (
-    // Main Page Wrapper:
-    // Added this Box to control the side padding to match checkout.js
+  return (<>
+    {/* // Main Page Wrapper:
+    // Added this Box to control the side padding to match checkout.js */}
+    { !user ? ( <h1>LOGIN</h1> ):(
     <Box 
       sx={{ 
         mt: 2, 
@@ -60,6 +63,8 @@ export default function Cart() {
         </Box>
       </Box>
     </Box>
-  );
+  )}
+  </>
+  )
 }
 
