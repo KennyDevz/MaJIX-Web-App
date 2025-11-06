@@ -1,4 +1,48 @@
+import {useState} from "react"
+import { useNavigate } from "react-router-dom";
+import axios from "axios"
+
 export default function SignUpForm() {
+    const navigate = useNavigate()
+
+    const [formData, setFormData] = useState({
+        email: "",
+        password: "",
+        firstname: "",
+        lastname: ""
+    })
+
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [message, setMessage] = useState("")
+
+    const handleChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value
+        })
+    }
+
+    const handleSubmit = async (e) => {
+    e.preventDefault();
+        
+        if (formData.password !== confirmPassword) {
+            setMessage("Passwords do not match!");
+            alert("Password does not match!")
+            return;
+        }
+
+        try {
+        const response = await axios.post("http://localhost:8081/api/customer/register", formData);
+        setMessage("Registration successful!");
+        alert("Registration Successful!")
+        navigate("/")
+        console.log("Registered user:", response.data);
+        } catch (error) {
+        console.error("Error registering user:", error);
+        setMessage("Registration failed!");
+        }
+  };
+
     return (
         <div
             style={{
@@ -21,6 +65,7 @@ export default function SignUpForm() {
             </p>
 
             <form
+                onSubmit={handleSubmit}
                 style={{
                     display: 'flex',
                     flexDirection: 'column',
@@ -45,11 +90,14 @@ export default function SignUpForm() {
                             flex: '1 1 48%' // ✅ ensures equal width and wrapping
                         }}
                     >
-                        <label htmlFor='fname' style={{ fontWeight: '500' }}>
+                        <label htmlFor='firstname' style={{ fontWeight: '500' }}>
                             Firstname
                         </label>
                         <input
-                            id='fname'
+                            id='firstname'
+                            name="firstname"
+                            onChange={handleChange}
+                            value={formData.firstname}
                             type='text'
                             placeholder='Enter first name'
                             required
@@ -73,11 +121,14 @@ export default function SignUpForm() {
                             flex: '1 1 48%'
                         }}
                     >
-                        <label htmlFor='lname' style={{ fontWeight: '500' }}>
+                        <label htmlFor='lastname' style={{ fontWeight: '500' }}>
                             Lastname
                         </label>
                         <input
-                            id='lname'
+                            id='lastname'
+                            name="lastname"
+                            onChange={handleChange}
+                            value={formData.lastname}
                             type='text'
                             placeholder='Enter last name'
                             required
@@ -102,6 +153,9 @@ export default function SignUpForm() {
                     </label>
                     <input
                         id='email'
+                        name="email"
+                        onChange={handleChange}
+                        value={formData.email}
                         type='email'
                         placeholder='Enter your email'
                         required
@@ -125,6 +179,9 @@ export default function SignUpForm() {
                     </label>
                     <input
                         id='password'
+                        name="password"
+                        onChange={handleChange}
+                        value={formData.password}
                         type='password'
                         required
                         placeholder='Enter your password'
@@ -143,12 +200,14 @@ export default function SignUpForm() {
 
                 {/* Confirm Password */}
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <label htmlFor='password' style={{ fontWeight: '500' }}>
+                    <label htmlFor='confirmPassword' style={{ fontWeight: '500' }}>
                         Confirm Password
                     </label>
                     <input
-                        id='password'
+                        id='confirmPassword'
                         type='password'
+                        onChange={(e)=> setConfirmPassword(e.target.value)}
+                        value={confirmPassword}
                         required
                         placeholder='Confirm your password'
                         style={{
@@ -182,7 +241,7 @@ export default function SignUpForm() {
                         fontWeight: '500'
                     }}
                 >
-                    Login
+                    sign up
                 </button>
             </form>
         </div>
