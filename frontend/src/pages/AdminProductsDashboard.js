@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Header from '../components/Header'; // Component for the top navigation/sign-up bar
+import Header from '../components/AdminHeader'; // Component for the top navigation/sign-up bar
 import Footer from '../components/Footer'; // Component for the bottom links/copyright
 import StatsCards from '../components/StatsCards'; // Component for the key metrics (Total Products, Orders, etc.)
 import AdminProductManagement from '../components/AdminProductManagement'; // Component for the product list/table
