@@ -6,7 +6,7 @@ import jakarta.persistence.Entity;
 public class Admin extends User{
 
     public Admin(){this.setRole("ADMIN");}
-    public Admin(String email, String firstname, String lastname){
-        super(email,firstname,lastname, "ADMIN");
+    public Admin(String email, String password, String firstname, String lastname){
+        super(email, password, firstname,lastname, "ADMIN");
     }
 }
