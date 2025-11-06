@@ -5,7 +5,7 @@ import com.app.majix.service.CustomerService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/cusomter")
+@RequestMapping("/api/customer")
 @CrossOrigin(origins = "http://localhost:3000")
 public class CustomerController {
     private final CustomerService customerService;
