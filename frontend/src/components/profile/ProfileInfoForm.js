@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { 
   Box, 
   Typography, 
@@ -6,6 +6,8 @@ import {
   Button, 
   Grid 
 } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../../context/UserContext';
 
 // Custom styled TextField to match your Figma design
 const StyledTextField = (props) => (
@@ -49,6 +51,17 @@ const StyledTextField = (props) => (
 );
 
 export default function ProfileInfoForm() {
+  const {user,setUser} = useContext(UserContext)
+  const fullName = `${user?.firstname || ""} ${user?.lastname || ""}`.trim();
+  const navigate = useNavigate()
+
+  const handleLogout = ()=> {
+      setUser(null); 
+      alert("Logged Out");
+      localStorage.removeItem("user");
+      navigate("/Sign-in",{replace: true})
+  }
+
   return (
     <Box 
       component="form" 
@@ -67,13 +80,13 @@ export default function ProfileInfoForm() {
         <Grid item xs={12}>
           <StyledTextField 
             label="Full Name" 
-            defaultValue="John Doe" 
+            defaultValue={fullName}
           />
         </Grid>
         <Grid item xs={12}>
           <StyledTextField 
             label="Email Address" 
-            defaultValue="john.doe@example.com" 
+            defaultValue={user?.email || ""}
           />
         </Grid>
         <Grid item xs={12}>
@@ -117,6 +130,7 @@ export default function ProfileInfoForm() {
               borderColor: '#E7000B',
             }
           }}
+          onClick={handleLogout}
         >
           Logout
         </Button>

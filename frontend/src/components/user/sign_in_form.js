@@ -22,7 +22,14 @@ export default function SignInForm(){
         );
 
         if (response.data) {
-            const userData = { id: response.data.id, role: response.data.role };
+            const userData = { 
+                id: response.data.id, 
+                role: response.data.role, 
+                firstname: response.data.firstname,
+                lastname: response.data.lastname,
+                email: response.data.email
+            
+            };
             localStorage.setItem("user", JSON.stringify(userData));
 
             setUser(userData)
@@ -83,7 +90,7 @@ export default function SignInForm(){
                 </div>
 
                 <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-end' }}>
-                    <a href='' style={{ textDecoration: 'none', color: 'blue', fontSize:'12px' }}>Forgot password?</a>
+                    <a href style={{ textDecoration: 'none', color: 'blue', fontSize:'12px' }}>Forgot password?</a>
                 </div>
                 <button type="submit"
                 style={{
