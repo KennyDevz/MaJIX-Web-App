@@ -34,6 +34,9 @@ public class UserController {
         Map<String, Object> response = new HashMap<>();
         response.put("id", user.getUserId());
         response.put("role", user.getRole());
+        response.put("firstname", user.getFirstname());
+        response.put("lastname", user.getLastname());
+        response.put("email", user.getEmail());
         return response; //Can use Data Transfer Object
     }
 }
