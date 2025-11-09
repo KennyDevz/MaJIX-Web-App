@@ -10,7 +10,7 @@ import Shop from './pages/shop';
 import Cart from './pages/cart';
 import HomePage from './pages/homepage';
 import ProductView from './pages/product_view';
-import ProductsDashboard from './pages/AdminProductsDashboard';
+import AdminProductList from './pages/AdminProductList';
 
 
 function App() {
@@ -31,7 +31,7 @@ function App() {
         <Route path="/Checkout" element={<Checkout/>}/>
         <Route path="/Profile" element={<ProfilePage/>}/>
 
-        <Route path='/admin' element={<ProductsDashboard/>}/>
+        <Route path='/admin' element={<AdminProductList/>}/>
 
         </Routes>
         

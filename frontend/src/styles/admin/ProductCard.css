@@ -1,0 +1,63 @@
+/* ProductCard.css */
+
+.product-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+  border: 1px solid #949494; /* From Figma */
+  border-radius: 15px; /* From Figma */
+  background: white;
+}
+
+.product-image {
+  width: 124px;
+  height: 124px;
+  border-radius: 8px;
+  object-fit: cover;
+  background: #F0EEED; /* From Figma */
+}
+
+.product-info {
+  flex-grow: 1; /* This makes it take up the middle space */
+}
+
+.product-info .product-name {
+  font-size: 30px; /* From Figma */
+  font-weight: 600;
+  color: black;
+  margin-bottom: 8px;
+}
+
+.product-info .product-stock,
+.product-info .product-price {
+  font-size: 24px; /* Slightly smaller than Figma for balance */
+  font-weight: 400;
+  color: black;
+  margin-bottom: 4px;
+}
+
+.product-actions {
+  display: flex;
+  gap: 15px;
+}
+
+.action-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.edit-btn {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.delete-btn {
+  background: #A90303; /* From Figma */
+  color: white;
+}
