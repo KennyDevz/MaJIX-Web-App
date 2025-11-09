@@ -59,7 +59,7 @@ export default function ProfileInfoForm() {
       setUser(null); 
       alert("Logged Out");
       localStorage.removeItem("user");
-      navigate("/Sign-in",{replace: true})
+      navigate("/",{replace: true})
   }
 
   return (
