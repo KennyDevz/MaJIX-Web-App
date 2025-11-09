@@ -4,12 +4,21 @@ import CartIcon from "../assets/cart-icon.png"
 import SearchBar from './searchbar'
 import { UserContext } from "../context/UserContext"
 import { useContext, useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import SignInForm from "../components/user/sign_in_form"
+
 
 function NavBar(){
     const { user, setUser } = useContext(UserContext);
     const [showDropDown, setShowDropDown] = useState(false)
-    const navigate = useNavigate()
+    const [showSignIn, setShowSignIn] = useState(false)
+
+    const openSignIn = () =>{
+        setShowSignIn(true)
+    }
+
+    const closeSignIn = () => {
+        setShowSignIn(false)
+    }
 
     return(
         <div className="nav-bar">
@@ -50,10 +59,14 @@ function NavBar(){
             </div>
             ):(
              <ul className="user-links">
-                <li><Link to="/Sign-in" className="route-link">Sign In</Link></li>
+                <li className="route-link" onClick={openSignIn}>Sign In</li>
                 <li><Link to="/Sign-up" className="route-link">Sign Up</Link></li>
              </ul>
+
             )}
+
+            
+            {showSignIn && (<SignInForm onClose={closeSignIn}/>)}
              
         </div>
     )

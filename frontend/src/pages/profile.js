@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { 
   Box, 
   Typography, 
@@ -11,6 +11,7 @@ import { Person, ReceiptLong } from '@mui/icons-material';
 import ProfileInfoForm from '../components/profile/ProfileInfoForm';
 // 1. Import the new component
 import OrderHistory from '../components/profile/OrderHistory'; 
+import { UserContext } from '../context/UserContext';
 
 // Helper function for accessibility
 function a11yProps(index) {
@@ -22,6 +23,9 @@ function a11yProps(index) {
 
 export default function ProfilePage() {
   const [currentTab, setCurrentTab] = useState(0);
+  const {user} = useContext(UserContext)
+  const fullname = `${user?.firstname} ${user?.lastname}`
+  const initials = user ? `${user.firstname?.charAt(0) || ""}${user.lastname?.charAt(0) || ""}` : ""
 
   const handleTabChange = (event, newValue) => {
     setCurrentTab(newValue);
@@ -44,11 +48,11 @@ export default function ProfilePage() {
           sx={{ width: 80, height: 80, bgcolor: 'primary.main' }}
           // In a real app, you'd use: src={user.avatarUrl}
         >
-          JD
+          {initials}
         </Avatar>
         <Box>
           <Typography variant="h4" sx={{ fontWeight: '700', fontFamily: 'Poppins' }}>
-            John Doe
+            {fullname}
           </Typography>
           <Typography variant="body1" sx={{ color: 'text.secondary', fontFamily: 'Poppins' }}>
             Manage your account settings
