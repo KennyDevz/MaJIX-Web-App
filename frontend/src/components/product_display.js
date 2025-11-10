@@ -1,24 +1,22 @@
-
-import { Grid } from '@mui/material';
 import ProductCard from './product_card';
 import products from "../data/sample_data.json"; 
 
-export default function ProductDisplay(props) {
-  
+/*Vesion 2 */
+export default function ProductDisplay() {
   return (
-    <Grid container spacing={5} width='80%' >{/*Sample list only */} 
-    {products.map((p, i) => (
-        <Grid item xs={12} sm={6} md={3} key={i}>
-        <ProductCard
+    <div style={{ display: 'flex', justifyContent: 'flex-start', width: '100%' }}>
+      <div style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', gap: '30px', }}>
+        {products.map((p, i) => (
+          <ProductCard
+            key={i} // always add key
             image={p.image}
             title={p.title}
             name={p.name}
             price={p.price}
             rating={p.rating}
-        />
-        </Grid>
-    ))}
-    </Grid>
-
+          />
+        ))}
+      </div>
+    </div>
   );
 }
