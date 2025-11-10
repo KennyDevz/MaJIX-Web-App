@@ -3,7 +3,7 @@
 import React from 'react';
 // This component has a distinct dark grey background in the image.
 
-const Footer = () => {
+function Footer() {
   return (
     <footer className="footer-container">
       <div className="footer-content">
