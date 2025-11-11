@@ -1,100 +1,97 @@
 package com.app.majix.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import org.springframework.boot.autoconfigure.web.WebProperties;
+import jakarta.persistence.*;
+import java.util.List;
 
 @Entity
 public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long productId; 
 
-    private Long productId;
-
-    private String name;
+    private String name; 
+    
+    @Lob // For longer text, as in 'description (text)' 
     private String description;
-    private String color;
-    private String size;
-    private double price;
-    private int stockQuantity;
-    private String category;
+    
+    private String category; 
 
-    //constructors
-    public Product(){
+    private String imageUrl;
 
-    }
+    // link to the variants, as in 'Product (1) owns (1..*) ProductVariant' 
+    // 'mappedBy = "product"' tells JPA the 'product' field in ProductVariant owns this relationship
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<ProductVariant> variants; 
+    
+    // link to Reviews 
+    // @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    // private List<Review> reviews;
 
-    public Product(String name, String description, String color, String size, double price, int stockQuantity, String category){
+    // --- Constructors ---
+    public Product() {}
+
+    public Product(String name, String description, String category, String imageUrl) {
         this.name = name;
         this.description = description;
-        this.color = color;
-        this.size = size;
-        this.price = price;
-        this.stockQuantity = stockQuantity;
         this.category = category;
+        this.imageUrl = imageUrl;
     }
 
-    //setters and getters
-    public void setProductId(Long productId){
-        this.productId = productId;
-    }
-
-    public Long getProductId(){
+    // --- Getters and Setters ---
+    public Long getProductId() {
         return productId;
     }
 
-    public void setName(String name){
-        this.name = name;
+    public void setProductId(Long productId) {
+        this.productId = productId;
     }
-    public String getName(){
+
+    public String getName() {
         return name;
     }
 
-    public void setDescription(String description){
-        this.description = description;
+    public void setName(String name) {
+        this.name = name;
     }
-    public String getDescription(){
+
+    public String getDescription() {
         return description;
     }
 
-    public void setColor(String color){
-        this.color = color;
-    }
-    public String getColor(){
-        return color;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public void setSize(String size){
-        this.size = size;
-    }
-    public String getSize(){
-        return size;
+    public String getCategory() {
+        return category;
     }
 
-    public void setPrice(double price){
-        this.price = price;
-    }
-
-    public double getPrice(){
-        return price;
-    }
-
-    public void setStockQuantity(int stockQuantity){
-        this.stockQuantity = stockQuantity;
-    }
-
-    public int getStockQuantity(){
-        return stockQuantity;
-    }
-
-    public void setCategory(String category){
+    public void setCategory(String category) {
         this.category = category;
     }
 
-    public String getCategory(){
-        return category;
+    public List<ProductVariant> getVariants() {
+        return variants;
     }
+
+    public void setVariants(List<ProductVariant> variants) {
+        this.variants = variants;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+    
+    // public List<Review> getReviews() {
+    //     return reviews;
+    // }
+
+    // public void setReviews(List<Review> reviews) {
+    //     this.reviews = reviews;
+    // }
 }

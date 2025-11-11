@@ -11,9 +11,13 @@ import Shop from './pages/shop';
 import Cart from './pages/cart';
 import HomePage from './pages/homepage';
 import ProductView from './pages/product_view';
+<<<<<<< HEAD
 import AdminProductsDashboard from './pages/AdminProductsDashboard';
 import AboutUs from './pages/AboutUs';
 import Footer from './components/Footer';
+=======
+import AdminProductList from './pages/AdminProductList';
+>>>>>>> cc4e630c09f96ccd504b4fe81cab085b59614b6d
 
 
 function App() {
@@ -34,8 +38,14 @@ function App() {
         <Route path="/Details" element={<ProductView/>}/>
         <Route path="/Checkout" element={<Checkout/>}/>
         <Route path="/Profile" element={<ProfilePage/>}/>
+<<<<<<< HEAD
         <Route path='/Admin' element={<AdminProductsDashboard/>}/>
         <Route path='/AboutUs' element={<AboutUs/>}/>
+=======
+
+        <Route path='/admin' element={<AdminProductList/>}/>
+
+>>>>>>> cc4e630c09f96ccd504b4fe81cab085b59614b6d
         </Routes>
         
       </div>
