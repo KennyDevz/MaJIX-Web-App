@@ -6,7 +6,7 @@ import '../../styles/admin/ProductFormModal.css';
 const API_BASE_URL = 'http://localhost:8081/api/products';
 
 const BLANK_UI_VARIANT = {
-  color: '',
+  color: '#000000',
   price: 0,
   imageUrl: '',
   imageFile: null,
@@ -201,9 +201,9 @@ export default function ProductFormModal({ productToEdit, onClose, onSuccess }) 
                 required
               >
                 <option value="">Select Category</option>
-                <option value="T-Shirt">Tshirt</option>
+                <option value="T-Shirt">T-shirt</option>
                 <option value="Pants">Pants</option>
-                <option value="Shirt">Shirt</option>
+                <option value="Shirt">Shorts</option>
                 <option value="Jeans">Jeans</option>
                 <option value="Hoodie">Hoodie</option>
               </select>
@@ -234,15 +234,33 @@ export default function ProductFormModal({ productToEdit, onClose, onSuccess }) 
                   
                   <div className="form-group">
                     <label>Color *</label>
-                    <input 
-                      type="text" 
-                      name="color" 
-                      value={variant.color} 
-                      onChange={(e) => handleVariantChange(index, e)} 
-                      className="form-input"
-                      placeholder="e.g., Black"
-                      required
-                    />
+                    <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                      {/* The Color Picker */}
+                      <input 
+                        type="color" 
+                        name="color"
+                        // Use a valid hex. Default to black if state is invalid
+                        value={variant.color && /^#[0-9A-F]{6}$/i.test(variant.color) ? variant.color : '#000000'}
+                        onChange={(e) => handleVariantChange(index, e)}
+                        style={{
+                          width: '50px', 
+                          height: '40px', 
+                          padding: '0 5px',
+                          border: '1.33px solid #D1D5DC', // Match form-input
+                          borderRadius: '8px'
+                        }}
+                      />
+                      {/* The Text Input */}
+                      <input 
+                        type="text" 
+                        name="color" 
+                        value={variant.color} 
+                        onChange={(e) => handleVariantChange(index, e)} 
+                        className="form-input"
+                        placeholder="e.g., #FF0000"
+                        required
+                      />
+                    </div>
                   </div>
                   
                   <div className="form-group">

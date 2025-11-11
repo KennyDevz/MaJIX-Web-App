@@ -1,8 +1,13 @@
 import React from 'react';
 import '../styles/AboutUs.css'; 
-
+import { useEffect } from 'react';
 
 export default function AboutUs() {
+
+    useEffect(() => { //scrolls to the top of component
+          window.scrollTo(0, 0);
+    }, []);
+
     return(
         <div className="about-us-container">
       <header className="about-us-header">
