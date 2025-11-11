@@ -10,7 +10,8 @@ const Footer = () => {
         
         {/* Left Section: Brand Info */}
         <div className="footer-section brand-info">
-          <h3>MajIX</h3>
+          <h3>MaJIX</h3>
+          <p>Find clothes that matches your style.</p>
           <p>We craft style that suits your style and which you're proud to wear. From sunset to dawn.</p>
           {/* Placeholder for social media icons */}
           <div className="social-icons">
@@ -49,7 +50,7 @@ const Footer = () => {
 
       {/* Copyright Bar */}
       <div className="copyright-bar">
-        <p>Shopee © 2000-2023, All Rights Reserved</p>
+        <p>MaJIX © 2020-2025, All Rights Reserved</p>
       </div>
     </footer>
   );

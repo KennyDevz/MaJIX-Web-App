@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 import NavBar from './components/nav_bar';
 import './styles/App.css';
+import './styles/AboutUs.css';
 import Checkout from './pages/checkout';
 import ProfilePage from './pages/profile';
 import SignIn from './pages/sign_in';
@@ -10,12 +11,15 @@ import Shop from './pages/shop';
 import Cart from './pages/cart';
 import HomePage from './pages/homepage';
 import ProductView from './pages/product_view';
-import ProductsDashboard from './pages/AdminProductsDashboard';
+import AdminProductsDashboard from './pages/AdminProductsDashboard';
+import AboutUs from './pages/AboutUs';
+import Footer from './components/Footer';
 
 
 function App() {
   return (
     <div>
+    
       <Router>
       <NavBar/>
 
@@ -30,17 +34,21 @@ function App() {
         <Route path="/Details" element={<ProductView/>}/>
         <Route path="/Checkout" element={<Checkout/>}/>
         <Route path="/Profile" element={<ProfilePage/>}/>
-
-        <Route path='/admin' element={<ProductsDashboard/>}/>
-
+        <Route path='/Admin' element={<AdminProductsDashboard/>}/>
+        <Route path='/AboutUs' element={<AboutUs/>}/>
         </Routes>
         
       </div>
+      
+      <Footer/>
+
+      </Router>
+        
         
 
-        </Router>
     </div>
   );
 }
 
 export default App;
+ 

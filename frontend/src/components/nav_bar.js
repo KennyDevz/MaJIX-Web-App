@@ -18,7 +18,7 @@ function NavBar(){
                 <ul className="nav-links">
                     <li><Link to="/Shop" className="route-link">Shop</Link></li>
                     <li><Link to="" className="route-link">Collections</Link></li>
-                    <li><Link to="" className="route-link">About us</Link></li>
+                    <li><Link to="/AboutUs" className="route-link">About us</Link></li>
                 </ul>
                
         
