@@ -15,7 +15,7 @@ function Footer() {
           <p>We craft style that suits your style and which you're proud to wear. From sunset to dawn.</p>
           {/* Placeholder for social media icons */}
           <div className="social-icons">
-            <span>🐦</span><span>📘</span><span>📷</span><span>📌</span>
+            {/*<span>🐦</span><span>📘</span><span>📷</span><span>📌</span>*/}
           </div>
         </div>
 
@@ -50,7 +50,7 @@ function Footer() {
 
       {/* Copyright Bar */}
       <div className="copyright-bar">
-        <p>MaJIX © 2020-2025, All Rights Reserved</p>
+        <p>MaJIX © 2025, All Rights Reserved</p>
       </div>
     </footer>
   );
