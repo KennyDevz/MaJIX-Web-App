@@ -28,6 +28,10 @@ public class ProductService {
         return productRepository.findAll();
     }
 
+    public List<String> getAvailableColors() {
+        return productVariantRepository.findDistinctColors();
+    }
+
     public Product getProductById(Long id) {
         Optional<Product> productOpt = productRepository.findById(id);
         return productOpt.orElseThrow(() -> new ProductNotFoundException("Product with ID " + id + " not found"));

@@ -21,6 +21,11 @@ public class ProductController {
         return productService.getAllProducts();
     }
 
+    @GetMapping("/colors")
+    public List<String> getDistinctColors() {
+        return productService.getAvailableColors();
+    }
+
     @GetMapping("/{id}")
     public Product getProductById(@PathVariable Long id) {
         return productService.getProductById(id);
