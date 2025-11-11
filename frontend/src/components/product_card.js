@@ -7,34 +7,52 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { Link } from 'react-router-dom';
 
-/*Version 2 */
-export default function ProductCard(props) {
+/*Version 3*/
+export default function ProductCard({ product }) {
 
-    const formatted = Number(props.price).toLocaleString("en-PH", {
-        style: "currency",
-        currency: "PHP",
-    });
+  // --- 1. Get the variant to display ---
+  const displayVariant = product.variants && product.variants.length > 0 
+    ? product.variants[0] : {};
+
+  // --- 2. Calculate Total Stock ---
+  const totalStock = product.variants.reduce((acc, variant) => {
+    return acc + (variant.quantityInStock || 0); 
+  }, 0);
+
+  // --- 3. Format Price ---
+  const formattedPrice = Number(displayVariant.price).toLocaleString("en-PH", {
+    style: "currency",
+    currency: "PHP",
+  });
+
+  // --- 4. Handle Rating (Not in backend yet) ---
+  const rating = 4.5; 
 
   return (
     <Card sx={{ width: 250, borderRadius: '20px'}}>
+      {/* This CardActionArea now links to /Details
+        (Your App.js has a route for this)
+        We'll need to update this later to link to a specific
+        product, like /Details/1
+      */}
       <CardActionArea component={Link} to="/Details">
       <CardMedia
         sx={{ height: 220 }}
-        image={props.image}
-        title={props.title}
+        image={product.imageUrl || 'https://placehold.co/250x220'}
+        title={product.name}
         component="img"
       />
       <CardContent>
         <Typography gutterBottom variant="h6" component="div" sx={{fontWeight:"bold", whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>
-          {props.name}
+          {product.name}
         </Typography>
         <Box sx={{display: "flex"}}>
-            <Rating name='read-only' value={props.rating} precision={.5} readOnly/>
-            <Typography gutterBottom >{props.rating}/5</Typography>
+            <Rating name='read-only' value={rating} precision={.5} readOnly/>
+            <Typography gutterBottom >{rating}/5</Typography>
         </Box>
         <div style={{display: 'flex', flexDirection: 'row', alignItems:'center', gap:'5px'}}>
-          <Typography sx={{fontWeight: "bold", fontSize: "1.5rem"}}>{formatted}</Typography>
-          <Typography sx={{fontSize: '1rem', color: '#707070ff'}}>(99)</Typography>{/*total stocks*/}
+          <Typography sx={{fontWeight: "bold", fontSize: "1.5rem"}}>{formattedPrice}</Typography>
+          <Typography sx={{fontSize: '1rem', color: '#707070ff'}}>({totalStock})</Typography>
         </div>
       </CardContent>
       </CardActionArea>

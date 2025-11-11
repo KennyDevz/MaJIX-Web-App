@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import '../styles/admin/ProductList.css'; 
 import ProductCard from '../components/admin/ProductCard'; 
 import ProductFormModal from '../components/admin/ProductFormModal'; 
@@ -10,29 +11,22 @@ export default function AdminProductList() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // --- 2. State for controlling the modal ---
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [productToEdit, setProductToEdit] = useState(null); // null = Add mode
+  const [productToEdit, setProductToEdit] = useState(null); 
 
-  // --- 3. Extracted fetch logic ---
-  // We need a standalone function to refresh the list after an update
-  const fetchProducts = async () => {
+
+const fetchProducts = async () => {
     setLoading(true);
     try {
-      const response = await fetch(API_URL);
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      const data = await response.json();
-      setProducts(data);
+      const response = await axios.get(API_URL);
+      setProducts(response.data);
     } catch (e) {
-      setError(e.message);
+      setError(e.response?.data?.message || e.message);
     } finally {
       setLoading(false);
     }
   };
 
-  // Fetch products on initial component load
   useEffect(() => {
     fetchProducts();
   }, []);
@@ -60,22 +54,18 @@ export default function AdminProductList() {
     handleCloseModal(); // Close the modal
   };
 
-  // --- (handleDelete is the same as before) ---
+
   const handleDelete = async (productId) => {
     if (!window.confirm(`Are you sure you want to delete product ID ${productId}?`)) {
       return;
     }
     try {
-      const response = await fetch(`${API_URL}/${productId}`, {
-        method: 'DELETE',
-      });
-      if (!response.ok) {
-        throw new Error(`Failed to delete product. Status: ${response.status}`);
-      }
+      await axios.delete(`${API_URL}/${productId}`);
       setProducts(products.filter(p => p.productId !== productId));
       alert('Product deleted successfully!');
+
     } catch (e) {
-      setError(e.message);
+      setError(e.response?.data?.message || e.message);
       alert(`Error deleting product: ${e.message}`);
     }
   };
