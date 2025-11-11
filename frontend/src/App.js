@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import NavBar from './components/nav_bar';
 import './styles/App.css';
 import './styles/AboutUs.css';
+import './styles/AdminCss.css';
 import Checkout from './pages/checkout';
 import ProfilePage from './pages/profile';
 import SignIn from './pages/sign_in';
