@@ -1,7 +1,11 @@
 import ProductDisplay from "../components/product_display";
-
+import { useEffect } from "react";
 
 export default function HomePage(){
+    useEffect(() => { //scrolls to the top of component
+        window.scrollTo(0, 0);
+    }, []);
+
     return(
         <div>
                 <div style={{
