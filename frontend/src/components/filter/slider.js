@@ -19,11 +19,11 @@ export default function MySlider(){
                 valueLabelDisplay="auto"
                 onChange={handleChange}/>
 
-                {/* <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', }}>
                     <input type="text" value={`$ ${value[0]}`} style={{ width: '40%', border: '1px solid black', padding: '5px' }}  readOnly/>
                     <span>to</span>
                     <input type="text" value={`$ ${value[1]}`} style={{ width: '40%', border: '1px solid black', padding: '5px' }} readOnly />
-                </div> */}
+                </div>
         </div>
     )
 }

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { UploadImageService } from '../../services/UploadImageService'; 
 import '../../styles/admin/ProductFormModal.css'; 
 
@@ -137,31 +138,17 @@ export default function ProductFormModal({ productToEdit, onClose, onSuccess }) 
         variants: finalVariantsForBackend,
       };
 
-      // --- D. Smart API Call (POST or PUT) ---
-      let response;
-      if (isEditMode) {
-        // UPDATE (PUT)
-        response = await fetch(`${API_BASE_URL}/${productToEdit.productId}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-      } else {
-        // CREATE (POST)
-        response = await fetch(API_BASE_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-      }
 
-      if (!response.ok) {
-        throw new Error(`Failed to ${isEditMode ? 'update' : 'create'} product.`);
+
+      if (isEditMode) {
+        await axios.put(`${API_BASE_URL}/${productToEdit.productId}`, payload);
+      } else {
+        await axios.post(API_BASE_URL, payload);
       }
 
       alert(`Product ${isEditMode ? 'updated' : 'created'} successfully!`);
       onSuccess(); 
-
+      
     } catch (e) {
       setError(e.message);
     } finally {
