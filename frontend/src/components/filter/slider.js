@@ -19,7 +19,7 @@ export default function MySlider({ priceRange, onPriceChange }){
     return(
         <div style={{}}>
             <Slider
-                style={{width:250}}
+                style={{width:"100%"}}
                 color="black"
                 value={priceRange}
                 min={0}
