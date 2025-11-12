@@ -20,7 +20,7 @@ export default function Shop(){
     }, []);
 
     return(
-        <div style={{display: 'flex', flexDirection: 'row', height: 'calc(100vh - 80px)'}}>
+        <div style={{display: 'flex', flexDirection: 'row', }}>
                 <Filter onApplyFilters={handleApplyFilters}/>
            
             <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', overflowY: 'auto',}}>
