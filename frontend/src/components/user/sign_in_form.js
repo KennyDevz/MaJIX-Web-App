@@ -46,9 +46,14 @@ export default function SignInForm({ onClose }) {
         if (onClose) onClose(); // avoid 2 alerts check if onClose is defined or presents
       }
     } catch (error) {
-      setMessage(error.response?.data?.message || "Login failed");
-      alert("Login failed!");
-      setFormData({ email: "", password: "" });
+       if (error.response) {
+            setMessage(error.response.data.error)//Invalid email or password
+        } else if (error.request) {
+            setMessage("No response.")// No response received
+        } else {
+            setMessage("Please try again.")// Something else went wrong
+        }
+      setFormData({ ...formData, password: "" })
     }
   }
 
@@ -122,7 +127,7 @@ export default function SignInForm({ onClose }) {
           style={{ display: "flex", flexDirection: "column", gap: "20px" }}
         >
           <div style={{ display: "flex", flexDirection: "column" }}>
-            <label htmlFor="email" style={{ fontWeight: "500" }}>
+            <label htmlFor="email" style={{ fontWeight: "500", color: "black"}}>
               Email address
             </label>
             <input
@@ -136,14 +141,14 @@ export default function SignInForm({ onClose }) {
                 fontFamily: "Poppins",
                 borderRadius: "10px",
                 height: "40px",
-                border: "1px solid #a0a0a0ff",
-                paddingLeft: "15px",
+                border: message?"1px solid red":"1px solid #a0a0a0ff",
+                paddingLeft: "15px"
               }}
             />
           </div>
 
           <div style={{ display: "flex", flexDirection: "column" }}>
-            <label htmlFor="password" style={{ fontWeight: "500" }}>
+            <label htmlFor="password" style={{ fontWeight: "500", color:"black" }}>
               Password
             </label>
             <input
@@ -157,8 +162,9 @@ export default function SignInForm({ onClose }) {
                 fontFamily: "Poppins",
                 borderRadius: "10px",
                 height: "40px",
-                border: "1px solid #a0a0a0ff",
+                border: message?"1px solid red":"1px solid #a0a0a0ff",
                 paddingLeft: "15px",
+                backgroundColor: message?"#ffa3a36f":"#FFF"
               }}
             />
           </div>
@@ -196,13 +202,13 @@ export default function SignInForm({ onClose }) {
           >
             Login
           </button>
-
-          {message && (
-            <p style={{ color: "red", textAlign: "center", marginTop: "10px" }}>
-              {message}
-            </p>
-          )}
         </form>
+        {message && (
+            <div style={{display: 'flex', color: "red", justifyContent: "center",alignItems:'center', marginTop: '5px', borderRadius: '10px'}}>
+            <p>{message}</p>
+            </div>
+            
+          )}
       </div>
     </div>
   );
