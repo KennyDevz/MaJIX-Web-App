@@ -7,13 +7,10 @@ import com.app.majix.dto.UserDTO;
 import com.app.majix.entity.Admin;
 import com.app.majix.entity.Customer;
 import com.app.majix.entity.User;
-import com.app.majix.exception.UserNotFoundException;
 import com.app.majix.service.UserService;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/user/auth")
@@ -33,11 +30,11 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public UserDTO loginUser(@RequestBody LoginRequestDTO request) throws UserNotFoundException {
+    public ResponseEntity<UserDTO> loginUser(@Valid @RequestBody LoginRequestDTO request) {
         User user = userService.login(request.getEmail(), request.getPassword());
 
         if(user instanceof Customer customer){
-            return new CustomerDTO(
+            CustomerDTO customerDTO = new CustomerDTO(
                 customer.getUserId(),
                 customer.getRole(),
                 customer.getFirstname(),
@@ -45,22 +42,25 @@ public class UserController {
                 customer.getEmail(),
                 customer.getPhonenumber()
             );
+            return ResponseEntity.ok(customerDTO);
         } else if (user instanceof Admin admin){
-            return new AdminDTO(
+            AdminDTO adminDTO = new  AdminDTO(
                     admin.getUserId(),
                     admin.getRole(),
                     admin.getFirstname(),
                     admin.getLastname(),
                     admin.getEmail()
             );
+            return ResponseEntity.ok(adminDTO);
         }else {
-            return new UserDTO(
+            UserDTO userDTO = new UserDTO(
                     user.getUserId(),
                     user.getRole(),
                     user.getFirstname(),
                     user.getLastname(),
                     user.getEmail()
             );
+            return ResponseEntity.ok(userDTO);
         }
     }
 }
