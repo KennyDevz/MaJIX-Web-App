@@ -92,7 +92,7 @@ export default function ProfileInfoForm() {
         <Grid item xs={12}>
           <StyledTextField 
             label="Phone Number" 
-            defaultValue="+1 (555) 000-0000" 
+            defaultValue={user?.phonenumber || ""}
           />
         </Grid>
         <Grid item xs={12}>
