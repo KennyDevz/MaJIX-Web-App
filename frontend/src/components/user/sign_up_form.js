@@ -9,7 +9,8 @@ export default function SignUpForm() {
         email: "",
         password: "",
         firstname: "",
-        lastname: ""
+        lastname: "",
+        phonenumber: "",
     })
 
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -32,14 +33,14 @@ export default function SignUpForm() {
         }
 
         try {
-        const response = await axios.post("http://localhost:8081/api/customer/register", formData);
-        setMessage("Registration successful!");
-        alert("Registration Successful!")
-        navigate("/")
-        console.log("Registered user:", response.data);
+            const response = await axios.post("http://localhost:8081/api/customer/register", formData);
+            setMessage("Registration successful!");
+            alert("Registration Successful!")
+            navigate("/")
+            console.log("Registered user:", response.data);
         } catch (error) {
-        console.error("Error registering user:", error);
-        setMessage("Registration failed!");
+            console.error("Error registering user:", error);
+            setMessage("Registration failed!");
         }
   };
 
@@ -70,7 +71,7 @@ export default function SignUpForm() {
                     display: 'flex',
                     flexDirection: 'column',
                     gap: '10px',
-                    marginTop: '30px'
+                    marginTop:'20px'
                 }}
             >
                 {/* 🔹 Name row */}
@@ -158,6 +159,33 @@ export default function SignUpForm() {
                         value={formData.email}
                         type='email'
                         placeholder='Enter your email'
+                        required
+                        style={{
+                            fontFamily: 'Poppins',
+                            borderRadius: '15px',
+                            height: '40px',
+                            border: '1px solid #a0a0a0ff',
+                            paddingLeft: '20px',
+                            paddingRight: '20px',
+                            width: '100%',
+                            boxSizing: 'border-box'
+                        }}
+                    />
+                </div>
+
+                {/* Phone number */}
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <label htmlFor='email' style={{ fontWeight: '500' }}>
+                        Phone Number
+                    </label>
+                    <input
+                        id='phonenumber'
+                        name="phonenumber"
+                        onChange={handleChange}
+                        value={formData.phonenumber}
+                        type="tel" 
+                        pattern="[0-9]{11}" 
+                        placeholder='Enter your phonenumber'
                         required
                         style={{
                             fontFamily: 'Poppins',

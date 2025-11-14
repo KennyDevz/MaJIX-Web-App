@@ -27,8 +27,8 @@ export default function SignInForm({ onClose }) {
           role: response.data.role,
           firstname: response.data.firstname,
           lastname: response.data.lastname,
-          email: response.data.email
-
+          email: response.data.email,
+          phonenumber: response.data.phonenumber,
 
         };
 
