@@ -2,7 +2,7 @@ package com.app.majix.controller;
 
 import org.springframework.web.bind.annotation.*;
 import com.app.majix.service.ProductService;
-import com.app.majix.controller.dto.ProductCreationRequest;
+import com.app.majix.dto.ProductCreationRequest;
 import com.app.majix.entity.Product;
 import java.util.List;
 

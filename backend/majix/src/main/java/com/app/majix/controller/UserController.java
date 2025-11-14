@@ -1,10 +1,18 @@
 package com.app.majix.controller;
 
+import com.app.majix.dto.AdminDTO;
+import com.app.majix.dto.CustomerDTO;
+import com.app.majix.dto.LoginRequestDTO;
+import com.app.majix.dto.UserDTO;
+import com.app.majix.entity.Admin;
+import com.app.majix.entity.Customer;
 import com.app.majix.entity.User;
+import com.app.majix.exception.UserNotFoundException;
 import com.app.majix.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 @RestController
@@ -25,18 +33,34 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public Map<String, Object> loginUser(@RequestBody Map<String, String> loginData) {
-        String email = loginData.get("email");
-        String password = loginData.get("password");
+    public UserDTO loginUser(@RequestBody LoginRequestDTO request) throws UserNotFoundException {
+        User user = userService.login(request.getEmail(), request.getPassword());
 
-        User user = userService.login(email, password);
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("id", user.getUserId());
-        response.put("role", user.getRole());
-        response.put("firstname", user.getFirstname());
-        response.put("lastname", user.getLastname());
-        response.put("email", user.getEmail());
-        return response; //Can use Data Transfer Object
+        if(user instanceof Customer customer){
+            return new CustomerDTO(
+                customer.getUserId(),
+                customer.getRole(),
+                customer.getFirstname(),
+                customer.getLastname(),
+                customer.getEmail(),
+                customer.getPhonenumber()
+            );
+        } else if (user instanceof Admin admin){
+            return new AdminDTO(
+                    admin.getUserId(),
+                    admin.getRole(),
+                    admin.getFirstname(),
+                    admin.getLastname(),
+                    admin.getEmail()
+            );
+        }else {
+            return new UserDTO(
+                    user.getUserId(),
+                    user.getRole(),
+                    user.getFirstname(),
+                    user.getLastname(),
+                    user.getEmail()
+            );
+        }
     }
 }
