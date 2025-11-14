@@ -1,4 +1,4 @@
-package com.app.majix.controller.dto;
+package com.app.majix.dto;
 
 import com.app.majix.entity.Product;
 import com.app.majix.entity.ProductVariant;
