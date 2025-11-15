@@ -30,12 +30,7 @@ export default function ProductCard({ product }) {
 
   return (
     <Card sx={{ width: 250, borderRadius: '20px'}}>
-      {/* This CardActionArea now links to /Details
-        (Your App.js has a route for this)
-        We'll need to update this later to link to a specific
-        product, like /Details/1
-      */}
-      <CardActionArea component={Link} to="/Details">
+      <CardActionArea component={Link} to={`/Details/${product.productId}`}>
       <CardMedia
         sx={{ height: 220 }}
         image={product.imageUrl || 'https://placehold.co/250x220'}
