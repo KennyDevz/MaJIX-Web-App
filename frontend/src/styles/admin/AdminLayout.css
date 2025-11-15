@@ -1,13 +1,13 @@
-/* ProductList.css */
+/* AdminLayout.css */
 
 /* General Page Setup */
 .admin-container {
   width: 90%;
-  max-width: 1440px; /* Matches Figma's 1240px + 100px padding */
+  max-width: 1440px; 
   margin: 0 auto;
   padding: 20px;
   font-family: 'Poppins', sans-serif;
-  background: #ffffff; /* Softer background */
+  background: #ffffff; 
 }
 
 .admin-header h1 {
@@ -17,7 +17,6 @@
   margin: 10px 0 30px 0;
 }
 
-/* Stats Cards (from your Figma) */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -42,7 +41,7 @@
   margin: 0;
 }
 
-/* Tabs (from your Figma) */
+
 .admin-tabs {
   display: flex;
   align-items: center;

@@ -1,5 +1,5 @@
 import React from 'react';
-import '../../styles/admin/ProductList.css';
+import '../../styles/admin/AdminLayout.css';
 import '../../styles/admin/AdminOrderPage.css';
 
 

@@ -1,20 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import { NavLink, Outlet } from 'react-router-dom';
-import axios from 'axios'; // <-- Import axios
-import { API_BASE_URL } from '../../apiConfig'; // <-- Import your new config
-import '../../styles/admin/ProductList.css'; 
+import React, { useState, useEffect, useCallback } from 'react'; 
+import { Outlet, NavLink } from 'react-router-dom';
+import axios from 'axios';
+import { API_BASE_URL } from '../../apiConfig';
+import '../../styles/admin/AdminLayout.css'; 
+import StatsCards from '../../components/admin/StatsCards';
+import ProductFormModal from '../../components/admin/ProductFormModal'; 
 
 // Define the product-specific URL
 const PRODUCTS_API_URL = `${API_BASE_URL}/products`;
 
 export default function AdminLayout() {
-  // --- 1. State lifted up from AdminProductList ---
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // --- 2. Logic lifted up from AdminProductList ---
-  const fetchProducts = async () => {
+  // 3. Add modal state here
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [productToEdit, setProductToEdit] = useState(null);
+
+  // 4. Use useCallback for fetchProducts
+  const fetchProducts = useCallback(async () => {
     setLoading(true);
     try {
       const response = await axios.get(PRODUCTS_API_URL);
@@ -24,11 +29,33 @@ export default function AdminLayout() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []); 
 
   useEffect(() => {
     fetchProducts();
-  }, []);
+  }, [fetchProducts]);
+
+  // 5. All handlers live in this file now
+  const handleOpenAddModal = () => {
+    setProductToEdit(null);
+    setIsModalOpen(true);
+  };
+
+  const handleOpenEditModal = (product) => {
+    setProductToEdit(product);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setProductToEdit(null);
+  };
+
+  // This is called by the modal
+  const handleSuccess = () => {
+    fetchProducts(); 
+    handleCloseModal();
+  };
 
   const handleDelete = async (productId) => {
     if (!window.confirm(`Are you sure you want to delete product ID ${productId}?`)) {
@@ -36,14 +63,20 @@ export default function AdminLayout() {
     }
     try {
       await axios.delete(`${PRODUCTS_API_URL}/${productId}`);
-      // Re-fetch products to update the list
-      fetchProducts(); 
       alert('Product deleted successfully!');
-
+      fetchProducts(); // Re-fetches products (updates list AND stat card)
     } catch (e) {
       setError(e.response?.data?.message || e.message);
       alert(`Error deleting product: ${e.message}`);
     }
+  };
+
+  const stats = {
+    productCount: loading ? '...' : products.length,
+    totalOrders: 5,     
+    pendingOrders: 2,
+    returnRequest: 1,
+    totalRevenue: '$ 5,257'
   };
 
   return (
@@ -52,31 +85,7 @@ export default function AdminLayout() {
         <h1>MaJIX Admin</h1>
       </div>
 
-      {/* Stats Cards */}
-      <div className="stats-grid">
-        <div className="stat-card">
-          <h3>Total Products</h3>
-          {/* --- 3. Stat card is now dynamic! --- */}
-          <p>{loading ? '...' : products.length}</p>
-        </div>
-        {/* ...other stat cards... */}
-        <div className="stat-card">
-          <h3>Total Orders</h3>
-          <p>5</p>
-        </div>
-        <div className="stat-card">
-          <h3>Pending Orders</h3>
-          <p>2</p>
-        </div>
-        <div className="stat-card">
-          <h3>Return Request</h3>
-          <p>1</p>
-        </div>
-        <div className="stat-card">
-          <h3>Total Revenue</h3>
-          <p>$ 5,257</p>
-        </div>
-      </div>
+      <StatsCards stats={stats} />
 
       {/* Navigation Tabs */}
       <div className="admin-tabs">
@@ -89,8 +98,16 @@ export default function AdminLayout() {
       {/* Main Content Area */}
       <div className="content-area">
         {/* --- 4. Pass all data and functions down via context --- */}
-        <Outlet context={{ products, loading, error, fetchProducts, handleDelete }} />
+        <Outlet context={{ products, loading, error, handleOpenAddModal, handleOpenEditModal, handleDelete }} />
       </div>
+
+      {isModalOpen && (
+        <ProductFormModal
+          productToEdit={productToEdit}
+          onClose={handleCloseModal}
+          onSuccess={handleSuccess}
+        />
+      )}
     </div>
   );
 }
