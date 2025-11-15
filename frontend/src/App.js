@@ -1,9 +1,11 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 
 import NavBar from './components/nav_bar';
 import './styles/App.css';
 import './styles/AboutUs.css';
 import './styles/AdminCss.css';
+import './styles/admin/AdminOrderPage.css';
+import './styles/admin/ProductList.css';
 import Checkout from './pages/checkout';
 import ProfilePage from './pages/profile';
 import SignIn from './pages/sign_in';
@@ -15,11 +17,48 @@ import ProductView from './pages/product_view';
 import AboutUs from './pages/AboutUs';
 import Footer from './components/Footer';
 import AdminProductList from './pages/AdminProductList';
-
+import AdminOrderPage from './pages/admin/AdminOrderPage';
+import AdminLayout from './pages/admin/AdminLayout';
 
 function App() {
   return (
-    <div>
+    <Router>
+      <div className="App">
+        <NavBar />
+        <div className="main-content">
+          <Routes>
+            {/* --- Public Routes --- */}
+            <Route path="/" element={<HomePage />} />
+            <Route path="/Shop" element={<Shop />} />
+            <Route path="/Details/:productId" element={<ProductView/>}/>
+            <Route path='/Cart' element={<Cart/>}/>
+            <Route path='/Sign-in' element={<SignIn/>}/>
+            <Route path='/Sign-up' element={<SignUp/>}/>
+            <Route path="/Details" element={<ProductView/>}/>
+            <Route path="/Checkout" element={<Checkout/>}/>
+            <Route path="/Profile" element={<ProfilePage/>}/>
+            <Route path='/AboutUs' element={<AboutUs/>}/>
+            {/* ... etc. */}
+
+            {/* --- Admin Routes --- */}
+            <Route path="/admin" element={<AdminLayout />}>
+              {/* These routes render INSIDE the <Outlet> */}
+              <Route path="products" element={<AdminProductList />} />
+              <Route path="orders" element={<AdminOrderPage />} />
+              
+              {/* Add a default route for /admin */}
+              <Route index element={<Navigate to="products" replace />} />
+            </Route>
+
+          </Routes>
+        </div>
+      </div>
+
+    <Footer />
+    </Router>
+  );
+
+    {/*<div>
     
       <Router>
       <NavBar/>
@@ -39,7 +78,7 @@ function App() {
         <Route path='/AboutUs' element={<AboutUs/>}/>
 
         <Route path='/admin' element={<AdminProductList/>}/>
-
+        <Route path='/AdminOrderPage' element={<AdminOrderPage/>}/>
         </Routes>
         
       </div>
@@ -51,7 +90,7 @@ function App() {
         
 
     </div>
-  );
+  );*/}
 }
 
 export default App;

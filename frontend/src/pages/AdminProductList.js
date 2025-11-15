@@ -71,17 +71,50 @@ const fetchProducts = async () => {
   };
 
   return (
-    <div className="admin-container">
-      {/* Header */}
+  <>
+      <div className="content-header">
+        <h2>PRODUCT MANAGEMENT</h2>
+        <button onClick={handleOpenAddModal} className="add-product-btn">
+          <span>+</span>
+          <span>Add Product</span>
+        </button>
+      </div>
+
+      <div className="product-list">
+        {loading && <div>Loading products...</div>}
+        {error && <div>Error fetching products: {error}</div>}
+        
+        {products.map(product => (
+          <ProductCard 
+            key={product.productId} 
+            product={product} 
+            onDelete={handleDelete}
+            onEdit={handleOpenEditModal} 
+          />
+        ))}
+      </div>
+
+      {isModalOpen && (
+        <ProductFormModal
+          productToEdit={productToEdit}
+          onClose={handleCloseModal}
+          onSuccess={handleSuccess}
+        />
+      )}
+    </>
+  );
+  
+  {/*<div className="admin-container">
+      {/* Header }
       <div className="admin-header">
         <h1>MaJIX Admin</h1>
       </div>
 
-      {/* Stats Cards */}
+      {/* Stats Cards }
       <div className="stats-grid">
         <div className="stat-card">
           <h3>Total Products</h3>
-          <p>{products.length}</p> {/* This one is dynamic! */}
+          <p>{products.length}</p> {/* This one is dynamic! }
         </div>
         <div className="stat-card">
           <h3>Total Orders</h3>
@@ -101,7 +134,7 @@ const fetchProducts = async () => {
         </div>
       </div>
 
-      {/* Navigation Tabs */}
+      {/* Navigation Tabs }
       <div className="admin-tabs">
         <div className="tab-item active">Products</div>
         <div className="tab-item">Orders</div>
@@ -109,19 +142,19 @@ const fetchProducts = async () => {
         <div className="tab-item">Customers</div>
       </div>
 
-      {/* Main Content Area */}
+      {/* Main Content Area }
       <div className="content-area">
         <div className="content-header">
           <h2>PRODUCT MANAGEMENT</h2>
           
-          {/* --- 5. Changed Link to a button with onClick --- */}
+          {/* --- 5. Changed Link to a button with onClick --- }
           <button onClick={handleOpenAddModal} className="add-product-btn">
             <span>+</span>
             <span>Add Product</span>
           </button>
         </div>
 
-        {/* Product List */}
+        {/* Product List }
         <div className="product-list">
           {loading && <div>Loading products...</div>}
           {error && <div>Error fetching products: {error}</div>}
@@ -137,7 +170,7 @@ const fetchProducts = async () => {
         </div>
       </div>
 
-      {/* --- 7. Conditionally render the modal --- */}
+      {/* --- 7. Conditionally render the modal --- }
       {isModalOpen && (
         <ProductFormModal
           productToEdit={productToEdit}
@@ -146,5 +179,5 @@ const fetchProducts = async () => {
         />
       )}
     </div>
-  );
+  );*/}
 }

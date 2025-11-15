@@ -27,6 +27,7 @@
   font-weight: 600;
   color: black;
   margin-bottom: 8px;
+  text-align: left;
 }
 
 .product-info .product-stock,
@@ -35,6 +36,7 @@
   font-weight: 400;
   color: black;
   margin-bottom: 4px;
+  text-align: left;
 }
 
 .product-actions {
