@@ -10,6 +10,8 @@ public class CartItem {
 
     private Long cartItemId;
 
+    private Long productId;
+
     private int qty;
     private double price;
 

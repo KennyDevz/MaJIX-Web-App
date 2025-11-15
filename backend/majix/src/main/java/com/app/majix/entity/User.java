@@ -8,12 +8,13 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long UserId; //rename to "id" later for clarity
+    private Long userId; //rename to "id" later for clarity
     private String email;
     private String password;
     private String firstname;
     private String lastname;
     private String role;
+
 //    private boolean isLoggedIn;
     public User(){}
     public User(String email, String password, String firstname, String lastname, String role){
@@ -24,16 +25,15 @@ public class User {
         this.role = role;
     }
 
-    public void setUserId(Long UserId){this.UserId = UserId;}
+    public void setUserId(Long UserId){this.userId = UserId;}
     public void setEmail(String email){this.email = email;}
     public void setPassword(String password){this.password = password;}
     public void setFirstname(String firstname){this.firstname = firstname;}
     public void setLastname(String lastname){this.lastname = lastname;}
-
     public void setRole(String role){this.role = role;}
 //    public void setIsLoggedIn(boolean isLoggedIn){this.isLoggedIn = isLoggedIn;}
 
-    public Long getUserId(){return this.UserId;}
+    public Long getUserId(){return this.userId;}
     public String getEmail(){return this.email;}
     public String getPassword(){return this.password;}
     public String getFirstname(){return this.firstname;}

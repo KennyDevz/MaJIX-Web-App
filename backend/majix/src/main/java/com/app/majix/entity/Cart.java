@@ -1,5 +1,6 @@
 package com.app.majix.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.*;
@@ -12,14 +13,21 @@ public class Cart {
 
     private Long cartId;
 
-    private String cartItems; //will later become List<CartItem>
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CartItem> cartItems = new ArrayList<>();
+
+    // Link to Customer
+    @OneToOne
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
+
     private double totalAmount;
 
     public Cart(){
 
     }
 
-    public Cart(String cartItems, double totalAmount){
+    public Cart(List<CartItem> cartItems, double totalAmount){
         this.cartItems = cartItems;
         this.totalAmount = totalAmount;
     }
@@ -28,17 +36,20 @@ public class Cart {
         this.cartId = cartId;
     }
 
-    public Long getCardId(){
+    public Long getCartId(){
         return cartId;
     }
 
-    public void setCartItems(String cartItems){
+    public void setCartItems(List<CartItem> cartItems){
         this.cartItems = cartItems;
     }
 
-    public String getCartItems(){
+    public List<CartItem> getCartItems(){
         return cartItems;
     }
+
+    public void setCustomer(Customer customer){this.customer = customer;}
+    public Customer getCustomer(){return this.customer;}
 
     public void setTotalAmount(double totalAmount){
         this.totalAmount = totalAmount;
@@ -47,7 +58,6 @@ public class Cart {
     public double getTotalAmount(){
         return totalAmount;
     }
-
 
 
 }
