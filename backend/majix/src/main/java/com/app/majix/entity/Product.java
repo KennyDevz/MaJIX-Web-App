@@ -21,12 +21,12 @@ public class Product {
 
     // link to the variants, as in 'Product (1) owns (1..*) ProductVariant' 
     // 'mappedBy = "product"' tells JPA the 'product' field in ProductVariant owns this relationship
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<ProductVariant> variants; 
     
-    // link to Reviews 
-    // @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    // private List<Review> reviews;
+    // link to Reviews
+     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+     private List<Review> reviews;
 
     // --- Constructors ---
     public Product() {}
@@ -87,11 +87,7 @@ public class Product {
         this.imageUrl = imageUrl;
     }
     
-    // public List<Review> getReviews() {
-    //     return reviews;
-    // }
+     public List<Review> getReviews() { return reviews; }
 
-    // public void setReviews(List<Review> reviews) {
-    //     this.reviews = reviews;
-    // }
+     public void setReviews(List<Review> reviews) { this.reviews = reviews;}
 }
