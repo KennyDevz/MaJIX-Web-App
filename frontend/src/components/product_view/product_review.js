@@ -2,7 +2,7 @@ import { Box, Typography } from "@mui/material";
 import RemoveIcon from "@mui/icons-material/Remove";
 import Rating from '@mui/material/Rating';
 
-export default function ProductReview({ name, text, date, verified }) {
+export default function ProductReview({ name, text, date, rating }) {
   return (
     <Box
       sx={{
@@ -16,11 +16,10 @@ export default function ProductReview({ name, text, date, verified }) {
         mb: 4,
       }}
     >
-      {/* Header Row */}
+      
       <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", width: "100%" }}>
-        {/* Reviewer Info */}
         <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5, flex: 1 }}>
-            <Rating name="read-only" value={4.5} precision={0.5} readOnly />
+            <Rating name="read-only" value={rating || 0} precision={0.5} readOnly />
             <Box sx={{ display: "flex", alignItems: "center", gap: 1, flexWrap: "wrap" }}>
                 <Typography sx={{ fontSize: 20, fontWeight: 700, fontFamily: "sans-serif" }}>{name}</Typography>
             </Box>

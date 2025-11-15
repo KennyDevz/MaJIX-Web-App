@@ -19,9 +19,10 @@ export default function ProductDisplay({ appliedCategory, appliedPriceRange = DE
       setLoading(true);
       try {
         const response = await axios.get(API_URL);
-        setProducts(response.data); 
+        setProducts(Array.isArray(response.data) ? response.data : []);
       } catch (err) {
         setError(err.message);
+        setProducts([]);
       } finally {
         setLoading(false);
       }
@@ -31,6 +32,11 @@ export default function ProductDisplay({ appliedCategory, appliedPriceRange = DE
   }, []); 
 
 const filteredProducts = useMemo(() => {
+
+    if (!Array.isArray(products)) {
+      return [];
+    }
+
     const safeAppliedColors = Array.isArray(appliedColors) ? appliedColors : [];
     const safeAppliedSizes = Array.isArray(appliedSizes) ? appliedSizes : [];
     const [minPrice, maxPrice] = appliedPriceRange;
