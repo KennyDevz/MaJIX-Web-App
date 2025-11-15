@@ -5,7 +5,7 @@ import './styles/App.css';
 import './styles/AboutUs.css';
 import './styles/AdminCss.css';
 import './styles/admin/AdminOrderPage.css';
-import './styles/admin/ProductList.css';
+import './styles/admin/AdminLayout.css';
 import Checkout from './pages/checkout';
 import ProfilePage from './pages/profile';
 import SignIn from './pages/sign_in';
@@ -16,14 +16,13 @@ import HomePage from './pages/homepage';
 import ProductView from './pages/product_view';
 import AboutUs from './pages/AboutUs';
 import Footer from './components/Footer';
-import AdminProductList from './pages/AdminProductList';
+import AdminProductList from './pages/admin/AdminProductList';
 import AdminOrderPage from './pages/admin/AdminOrderPage';
 import AdminLayout from './pages/admin/AdminLayout';
 
 function App() {
   return (
     <Router>
-      <div className="App">
         <NavBar />
         <div className="main-content">
           <Routes>
@@ -52,45 +51,10 @@ function App() {
 
           </Routes>
         </div>
-      </div>
 
     <Footer />
     </Router>
   );
-
-    {/*<div>
-    
-      <Router>
-      <NavBar/>
-
-
-      <div className='main-content'>
-        <Routes>  
-        <Route path='/' element={<HomePage/>}/>
-        <Route path='/Shop' element={<Shop/>}/>
-        <Route path="/Details/:productId" element={<ProductView/>}/>
-        <Route path='/Cart' element={<Cart/>}/>
-        <Route path='/Sign-in' element={<SignIn/>}/>
-        <Route path='/Sign-up' element={<SignUp/>}/>
-        <Route path="/Details" element={<ProductView/>}/>
-        <Route path="/Checkout" element={<Checkout/>}/>
-        <Route path="/Profile" element={<ProfilePage/>}/>
-        <Route path='/AboutUs' element={<AboutUs/>}/>
-
-        <Route path='/admin' element={<AdminProductList/>}/>
-        <Route path='/AdminOrderPage' element={<AdminOrderPage/>}/>
-        </Routes>
-        
-      </div>
-      
-      <Footer/>
-
-      </Router>
-        
-        
-
-    </div>
-  );*/}
 }
 
 export default App;
