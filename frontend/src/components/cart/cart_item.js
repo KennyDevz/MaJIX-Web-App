@@ -12,7 +12,7 @@ import {useState} from 'react';
 
 
 export default function CartItem(props) {
-    const [quantity, setQuantity] = useState(1);
+    const [quantity, setQuantity] = useState(props.qty);
 
     const formattedPrice = Number(props.price).toLocaleString("en-PH", {
         style: "currency",
