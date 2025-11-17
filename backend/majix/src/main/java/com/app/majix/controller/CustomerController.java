@@ -1,6 +1,8 @@
 package com.app.majix.controller;
 
+import com.app.majix.dto.CartDTO;
 import com.app.majix.dto.CustomerDTO;
+import com.app.majix.entity.Cart;
 import com.app.majix.entity.Customer;
 import com.app.majix.entity.User;
 import com.app.majix.mapper.UserMapper;
@@ -32,5 +34,11 @@ public class CustomerController {
         //convert using the mapper
         CustomerDTO customerDTO = userMapper.toCustomerDTO(newCustomer);
         return ResponseEntity.ok(customerDTO);
+    }
+
+    @GetMapping("/{customerId}/cart")
+    public ResponseEntity<CartDTO> getUsersCart(@PathVariable Long customerId) {
+        Cart cart = customerService.getUsersCart(customerId);
+        return ResponseEntity.ok(userMapper.toCartDTO(cart));
     }
 }
