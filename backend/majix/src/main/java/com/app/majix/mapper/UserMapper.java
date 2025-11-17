@@ -1,10 +1,7 @@
 package com.app.majix.mapper;
 
 import com.app.majix.dto.*;
-import com.app.majix.entity.Admin;
-import com.app.majix.entity.Cart;
-import com.app.majix.entity.Customer;
-import com.app.majix.entity.User;
+import com.app.majix.entity.*;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -83,5 +80,26 @@ public class UserMapper {
                 .collect(Collectors.toList());
 
         return new CartDTO(cart.getCartId(), items);
+    }
+
+    public CartItemResponseDTO toCartItemResponseDTO(CartItem cartItem) {
+        return new CartItemResponseDTO(
+                cartItem.getCartItemId(),
+                cartItem.getProductVariant().getProduct().getProductId(),
+                cartItem.getProductVariant().getVariantId(),
+
+                // Product fields
+                cartItem.getProductVariant().getProduct().getName(),
+                cartItem.getProductVariant().getProduct().getImageUrl(),
+
+                // Variant fields
+                cartItem.getProductVariant().getSize(),
+                cartItem.getProductVariant().getColor(),
+
+                cartItem.getSubtotal(),
+
+                // Quantity
+                cartItem.getQty()
+        );
     }
 }
