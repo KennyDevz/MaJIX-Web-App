@@ -1,10 +1,15 @@
 package com.app.majix.controller;
 
+import com.app.majix.dto.CartItemResponseDTO;
 import com.app.majix.entity.Cart;
+import com.app.majix.entity.CartItem;
+import com.app.majix.mapper.UserMapper;
+import com.app.majix.repository.CartItemRepository;
 import com.app.majix.service.CartService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -12,9 +17,11 @@ import java.util.Map;
 @CrossOrigin(origins = "http://localhost:3000")
 public class CartController {
     private final CartService cartService;
+    private final CartItemRepository cartItemRepository;
 
-    public CartController(CartService cartService){
+    public CartController(CartService cartService, CartItemRepository cartItemRepository){
         this.cartService = cartService;
+        this.cartItemRepository = cartItemRepository;
     }
 
     @PostMapping("/add")
@@ -28,6 +35,11 @@ public class CartController {
             // Return the real error message in JSON
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
+    }
+
+    @GetMapping("/{customerId}")
+    public List<CartItemResponseDTO> getCartItemsByCustomer(@PathVariable Long customerId) {
+        return cartService.getCartItemsByCustomerId(customerId);
     }
 
 
