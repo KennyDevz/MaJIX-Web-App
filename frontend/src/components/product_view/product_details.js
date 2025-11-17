@@ -1,10 +1,12 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useContext } from "react";
 import { Box, Typography, Button, IconButton, Stack } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import Rating from "@mui/material/Rating";
+import { UserContext } from "../../context/UserContext";
 
 export default function ProductDetails({ product }) {
+  const {user} = useContext(UserContext)
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
   const [quantity, setQuantity] = useState(1);
@@ -71,17 +73,38 @@ export default function ProductDetails({ product }) {
     });
   };
 
-  const handleAddToCart = () => {
-    if (selectedVariant) {
-      console.log("Adding to cart:", {
-        productId: product.productId,
-        variantId: selectedVariant.variantId,
-        quantity: quantity,
-      });
-    } else {
-      alert("Please select a color and size.");
+ const handleAddToCart = async () => {
+  if (!selectedVariant) {
+    alert("Please select a color and size.");
+    return;
+  }
+
+  try {
+    const response = await fetch(
+      `http://localhost:8081/api/cart/add?customerId=${user.id}&variantId=${selectedVariant.variantId}&qty=${quantity}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      // Parse error message from backend
+      const errorData = await response.json();
+      alert("Error: " + (errorData.error || "Something went wrong"));
+      return;
     }
-  };
+
+    const cart = await response.json();
+    console.log("Cart updated:", cart);
+    alert("Item added to cart successfully!");
+  } catch (error) {
+    console.error("Network or server error:", error);
+    alert("Could not add to cart. Try again later.");
+  }
+};
 
   return (
     <Box display="flex" justifyContent="center" gap={6} mt={3}>
