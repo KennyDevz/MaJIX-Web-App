@@ -1,9 +1,6 @@
 package com.app.majix.mapper;
 
-import com.app.majix.dto.AdminDTO;
-import com.app.majix.dto.CartDTO;
-import com.app.majix.dto.CustomerDTO;
-import com.app.majix.dto.UserDTO;
+import com.app.majix.dto.*;
 import com.app.majix.entity.Admin;
 import com.app.majix.entity.Cart;
 import com.app.majix.entity.Customer;
@@ -11,16 +8,32 @@ import com.app.majix.entity.User;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class UserMapper {
     public CustomerDTO toCustomerDTO(Customer customer) {
         if(customer == null) return null;
         CartDTO cartDTO = null;
+
+
         if (customer.getCart() != null) {
+            Cart cart = customer.getCart();
+            // Force lazy load
+            cart.getCartItems().size();
+
+            List<CartItemDTO> cartItemDTOs = cart.getCartItems().stream()
+                    .map(item -> new CartItemDTO(
+                            item.getCartItemId(),
+                            item.getProductVariant() != null ? item.getProductVariant().getVariantId() : null,
+                            item.getQty(),
+                            item.getSubtotal()
+                    ))
+                    .toList();
+
             cartDTO = new CartDTO(
-                    customer.getCart().getCartId(), // use the actual cart ID
-                    List.of() // empty list, since no cart items yet
+                    cart.getCartId(),
+                    cartItemDTOs
             );
         }
         return new CustomerDTO(
@@ -55,5 +68,20 @@ public class UserMapper {
                 user.getLastname(),
                 user.getEmail()
         );
+    }
+
+    public CartDTO toCartDTO(Cart cart) {
+        if (cart == null) return null;
+
+        List<CartItemDTO> items = cart.getCartItems().stream()
+                .map(item -> new CartItemDTO(
+                        item.getCartItemId(),
+                        item.getProductVariant().getVariantId(), // just the variantId from your entity
+                        item.getQty(),
+                        item.getSubtotal()
+                ))
+                .collect(Collectors.toList());
+
+        return new CartDTO(cart.getCartId(), items);
     }
 }

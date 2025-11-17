@@ -1,22 +1,31 @@
 package com.app.majix.service;
 
 import com.app.majix.entity.Cart;
+import com.app.majix.entity.CartItem;
 import com.app.majix.entity.Customer;
-import com.app.majix.entity.User;
+import com.app.majix.entity.ProductVariant;
+import com.app.majix.repository.CartItemRepository;
 import com.app.majix.repository.CartRepository;
+import com.app.majix.repository.CustomerRepository;
+import com.app.majix.repository.ProductVariantRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class CartService {
+    private final CustomerRepository customerRepository;
     private final CartRepository cartRepository;
+    private final CartItemRepository cartItemRepository;
+    private final ProductVariantRepository productVariantRepository;
 
-
-    public CartService(CartRepository cartRepository){
+    // ✅ Constructor injection WITHOUT @Autowired
+    public CartService(CustomerRepository customerRepository,CartRepository cartRepository, CartItemRepository cartItemRepository,
+                       ProductVariantRepository productVariantRepository) {
+        this.customerRepository = customerRepository;
         this.cartRepository = cartRepository;
-    }
-
-    public Cart createCart(Cart cart){
-        return cartRepository.save(cart);
+        this.cartItemRepository = cartItemRepository;
+        this.productVariantRepository = productVariantRepository;
     }
 
     //creates cart for every customer registration
@@ -27,8 +36,34 @@ public class CartService {
         return cartRepository.save(cart);
     }
 
-    //query customer cart
-    public Cart getCartByUser(Customer customer) {
-        return cartRepository.findByCustomer(customer);
+
+    public Cart addToCart(Long customerId, Long variantId, int qty) {
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
+        ProductVariant variant = productVariantRepository.findById(variantId)
+                .orElseThrow(() -> new RuntimeException("Product Variant not found"));
+
+        if (qty > variant.getQuantityInStock()) {
+            throw new RuntimeException("Requested quantity exceeds stock available");
+        }
+
+        Cart cart = customer.getCart();
+
+        // Check if variant already exists in cart
+        Optional<CartItem> existingItem = cart.getCartItems().stream()
+                .filter(item -> item.getProductVariant().getVariantId().equals(variantId))
+                .findFirst();
+
+        if (existingItem.isPresent()) {
+            CartItem item = existingItem.get();
+            item.setQty(item.getQty() + qty); // increase quantity
+        } else {
+            CartItem newItem = new CartItem(cart, variant, qty);
+            cart.addCartItem(newItem);
+        }
+
+        cart.calculateTotalAmount(); // update total amount
+        cartRepository.save(cart); // save cart and cart items
+        return cart;
     }
 }

@@ -1,5 +1,6 @@
 package com.app.majix.service;
 
+import com.app.majix.entity.Cart;
 import com.app.majix.entity.Customer;
 import com.app.majix.repository.CartRepository;
 import com.app.majix.repository.CustomerRepository;
@@ -22,7 +23,8 @@ public class CustomerService {
         Customer newCustomer = customerRepository.save(customer);
 
         //automatically create cart for customer after
-        cartService.createCustomerCart(newCustomer);
+        Cart cart = cartService.createCustomerCart(newCustomer);
+        newCustomer.setCart(cart);
 
         return newCustomer;
     }
@@ -30,5 +32,12 @@ public class CustomerService {
     // Optional: find customer by email
     public Customer findByEmail(String email) {
         return customerRepository.findByEmail(email);
+    }
+
+    public Cart getUsersCart(Long customerId) {
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
+
+        return customer.getCart();
     }
 }
