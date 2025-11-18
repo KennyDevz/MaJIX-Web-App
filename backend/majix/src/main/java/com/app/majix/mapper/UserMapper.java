@@ -90,7 +90,7 @@ public class UserMapper {
 
                 // Product fields
                 cartItem.getProductVariant().getProduct().getName(),
-                cartItem.getProductVariant().getProduct().getImageUrl(),
+                cartItem.getProductVariant().getImageUrl(),
 
                 // Variant fields
                 cartItem.getProductVariant().getSize(),
