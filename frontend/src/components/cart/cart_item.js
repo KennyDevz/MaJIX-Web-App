@@ -87,11 +87,10 @@ export default function CartItem(props) {
           </CardContent>
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'space-between', height: '124px', pr: 1 }}>
             {/* Remove button at the top */}
-            <Button variant="text" sx={{ textTransform: 'none', color: 'text.primary', alignSelf: 'flex-end' , marginBottom:'20px'}}>
-              <IconButton size="small">
+              <IconButton size="small" variant="text" sx={{ textTransform: 'none', color: 'text.primary', alignSelf: 'flex-end' , marginBottom:'20px'}}>
                 <DeleteIcon sx={{ color: 'red' }} />
               </IconButton>
-            </Button>
+           
             {/* Add/Subtract controls at the bottom */}
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 , border:'1px', padding:'1px 8px', borderRadius:'15px', backgroundColor:'#F0F0F0'}}>
               <IconButton size="small" onClick={handleRemove}>

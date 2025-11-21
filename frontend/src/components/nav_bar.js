@@ -6,7 +6,7 @@ import { UserContext } from "../context/UserContext"
 import { useContext, useEffect, useState } from "react"
 import SignInForm from "../components/user/sign_in_form"
 
-
+// version 2
 function NavBar(){
     const { user, setUser } = useContext(UserContext);
     const [showDropDown, setShowDropDown] = useState(false)
@@ -32,7 +32,9 @@ function NavBar(){
                
         
              <SearchBar/>
-             <Link to="/Cart" className="route-link">
+            
+            <div className="user">
+            <Link to="/Cart" className="route-link">
                 <img src={CartIcon} alt="cart-icon"/>
             </Link>
 
@@ -55,16 +57,15 @@ function NavBar(){
                     <Link to="/Profile" className="route-link">Profile</Link>
                 </div>
                 )}
-            
-            </div>
-            ):(
-             <ul className="user-links">
-                <li className="route-link" onClick={openSignIn}>Sign In</li>
-                <li><Link to="/Sign-up" className="route-link">Sign Up</Link></li>
-             </ul>
+                </div>
+                ):(
+                <ul className="user-links">
+                    <li className="route-link" onClick={openSignIn}>Sign In</li>
+                    <li><Link to="/Sign-up" className="route-link">Sign Up</Link></li>
+                </ul>
 
             )}
-
+            </div>
             
             {showSignIn && (<SignInForm onClose={closeSignIn}/>)}
              
