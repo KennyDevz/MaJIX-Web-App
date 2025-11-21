@@ -45,13 +45,13 @@
 .admin-tabs {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 100px;
+  justify-content: space-evenly;
   background: black;
   border-radius: 10px;
   margin-bottom: 20px;
   padding: 5px;
 }
+
 .tab-item {
   padding: 10px 25px;
   color: white;
@@ -59,7 +59,10 @@
   font-weight: 500;
   cursor: pointer;
   border-radius: 10px;
+  text-decoration: none;
 }
+
+
 .tab-item.active {
   background: white;
   color: black;

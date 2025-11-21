@@ -18,6 +18,8 @@ import AboutUs from './pages/AboutUs';
 import Footer from './components/Footer';
 import AdminProductList from './pages/admin/AdminProductList';
 import AdminOrderPage from './pages/admin/AdminOrderPage';
+import AdminReturnsPage from './pages/admin/AdminReturnsPage';
+import AdminCustomersPage from './pages/admin/AdminCustomersPage';
 import AdminLayout from './pages/admin/AdminLayout';
 
 function App() {
@@ -44,6 +46,8 @@ function App() {
               {/* These routes render INSIDE the <Outlet> */}
               <Route path="products" element={<AdminProductList />} />
               <Route path="orders" element={<AdminOrderPage />} />
+              <Route path="returns" element={<AdminReturnsPage />} />
+              <Route path="customers" element={<AdminCustomersPage />} />
               
               {/* Add a default route for /admin */}
               <Route index element={<Navigate to="products" replace />} />
