@@ -28,6 +28,7 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    gap: 20px;
 }
 
 .user .route-link{
@@ -70,4 +71,8 @@
 
 .route-link:hover{
     color: #920303;
+}
+
+.cart{
+    display: flex;
 }
