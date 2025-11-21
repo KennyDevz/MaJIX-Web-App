@@ -44,7 +44,7 @@ export default function Cart() {
   if (loading) return <p>Loading cart...</p>;
   if (error) return <p>Error: {error}</p>;
 
-  return (<div style={{height: `calc(100vh - 80px)`,}}>
+  return (<div style={{height: `calc(100vh - 80px)`,overflowY:'auto'}}>
     {/* // Main Page Wrapper:
     // Added this Box to control the side padding to match checkout.js */}
     { !user ? ( 
@@ -80,7 +80,7 @@ export default function Cart() {
             }}
           >
             {/* This Box will contain the list of cart items */}
-            <Box sx={{ flex: 2, display: 'flex', flexDirection: 'column', gap: 2, width: '100%' }}>
+            <Box sx={{ flex: 2, display: 'flex', flexDirection: 'column', width: '100%'}}>
               {/* You would .map() over real cart items here */}
               {cartItems.length === 0 ? (
                 <p>Cart is empty</p>
@@ -94,7 +94,7 @@ export default function Cart() {
             </Box>
             
             {/* This Box wraps the order summary */}
-            <Box sx={{ flex: 1, width: '100%', maxWidth: { xs: '100%', md: '400px' }, position: 'sticky', top: '100px' }}>
+            <Box sx={{ flex: 1, width: '100%', maxWidth: { xs: '100%', md: '400px' }, top: '100px' }}>
               <OrderSummary 
                 buttonText="Go to Checkout"
                 onButtonClick={handleCheckoutClick}
