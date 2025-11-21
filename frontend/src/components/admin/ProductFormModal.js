@@ -158,7 +158,7 @@ export default function ProductFormModal({ productToEdit, onClose, onSuccess }) 
 
   // --- 3. Render with Modal Backdrop ---
  return (
-    <div className="modal-backdrop" onClick={onClose}>
+    <div className="modal-backdrop">
       <div className="modal-content" onClick={e => e.stopPropagation()}>
 
         <div className="modal-header">
