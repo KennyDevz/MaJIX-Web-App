@@ -29,14 +29,14 @@ public class Cart {
 
     public Cart(List<CartItem> cartItems) {
         this.cartItems = cartItems;
-        this.totalAmount = totalAmount;
+        calculateTotalAmount();
     }
 
      //ADDED CONSTRUCTOR --- optional, useful for creating cart with customer directly
      public Cart(Customer customer) {
          this.customer = customer;
          this.cartItems = new ArrayList<>();
-         this.totalAmount = 0.0;
+         calculateTotalAmount();
      }
 
     public void setCartId(Long cartId) {
@@ -85,12 +85,11 @@ public class Cart {
     }
 
     // --- Calculate total amount dynamically ---
-    public double calculateTotalAmount() {
+    public void calculateTotalAmount() {
         double total = 0.0;
         for (CartItem item : cartItems) {
             total += item.getSubtotal(); // NOTE: CartItem must have getSubtotal() method
         }
         this.totalAmount = total;
-        return total;
     }
 }

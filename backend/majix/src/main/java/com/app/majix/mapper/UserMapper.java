@@ -19,18 +19,24 @@ public class UserMapper {
             // Force lazy load
             cart.getCartItems().size();
 
-            List<CartItemDTO> cartItemDTOs = cart.getCartItems().stream()
-                    .map(item -> new CartItemDTO(
+            List<CartItemResponseDTO> cartItemResponseDto = cart.getCartItems().stream()
+                    .map(item -> new CartItemResponseDTO(
                             item.getCartItemId(),
-                            item.getProductVariant() != null ? item.getProductVariant().getVariantId() : null,
-                            item.getQty(),
-                            item.getSubtotal()
+                            item.getProductVariant().getProduct().getProductId(),
+                            item.getProductVariant().getVariantId(),
+                            item.getProductVariant().getProduct().getName(),
+                            item.getProductVariant().getProduct().getImageUrl(),
+                            item.getProductVariant().getSize(),
+                            item.getProductVariant().getColor(),
+                            item.getSubtotal(),
+                            item.getQty()
                     ))
                     .toList();
 
             cartDTO = new CartDTO(
                     cart.getCartId(),
-                    cartItemDTOs
+                    cartItemResponseDto,
+                    cart.getTotalAmount()
             );
         }
         return new CustomerDTO(
@@ -70,16 +76,22 @@ public class UserMapper {
     public CartDTO toCartDTO(Cart cart) {
         if (cart == null) return null;
 
-        List<CartItemDTO> items = cart.getCartItems().stream()
-                .map(item -> new CartItemDTO(
+        //Orginally list of CartItemDTO but modified to CartItemResponseDTO for frontend
+        List<CartItemResponseDTO> items = cart.getCartItems().stream()
+                .map(item -> new CartItemResponseDTO(
                         item.getCartItemId(),
-                        item.getProductVariant().getVariantId(), // just the variantId from your entity
-                        item.getQty(),
-                        item.getSubtotal()
+                        item.getProductVariant().getProduct().getProductId(),
+                        item.getProductVariant().getVariantId(),
+                        item.getProductVariant().getProduct().getName(),
+                        item.getProductVariant().getProduct().getImageUrl(),
+                        item.getProductVariant().getSize(),
+                        item.getProductVariant().getColor(),
+                        item.getSubtotal(),
+                        item.getQty()
                 ))
                 .collect(Collectors.toList());
 
-        return new CartDTO(cart.getCartId(), items);
+        return new CartDTO(cart.getCartId(), items, cart.getTotalAmount());
     }
 
     public CartItemResponseDTO toCartItemResponseDTO(CartItem cartItem) {

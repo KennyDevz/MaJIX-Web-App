@@ -1,5 +1,6 @@
 package com.app.majix.controller;
 
+import com.app.majix.dto.CartDTO;
 import com.app.majix.dto.CartItemResponseDTO;
 import com.app.majix.entity.Cart;
 import com.app.majix.entity.CartItem;
@@ -38,8 +39,8 @@ public class CartController {
     }
 
     @GetMapping("/{customerId}")
-    public List<CartItemResponseDTO> getCartItemsByCustomer(@PathVariable Long customerId) {
-        return cartService.getCartItemsByCustomerId(customerId);
+    public CartDTO getCartByCustomerId(@PathVariable Long customerId) {
+        return cartService.getCartByCustomerId(customerId);
     }
 
 

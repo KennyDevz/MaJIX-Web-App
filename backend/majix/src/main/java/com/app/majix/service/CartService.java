@@ -1,5 +1,6 @@
 package com.app.majix.service;
 
+import com.app.majix.dto.CartDTO;
 import com.app.majix.dto.CartItemResponseDTO;
 import com.app.majix.entity.Cart;
 import com.app.majix.entity.CartItem;
@@ -79,4 +80,21 @@ public class CartService {
                 .map(userMapper::toCartItemResponseDTO)
                 .toList();
     }
+
+    public CartDTO getCartByCustomerId(Long customerId){
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new RuntimeException("Customer not found: " + customerId));
+        Cart customerCart = cartRepository.findCartByCustomerUserId(customer.getUserId());
+        if(customerCart == null){
+            throw new RuntimeException("Cart not found for customer " + customerId);
+        }
+
+        // Recalculate totalAmount
+        customerCart.calculateTotalAmount();
+
+        // Convert to DTO
+        return userMapper.toCartDTO(customerCart);
+    }
+
+
 }
