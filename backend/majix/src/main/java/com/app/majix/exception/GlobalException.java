@@ -32,4 +32,10 @@ public class GlobalException {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(Map.of("error", "Something went wrong"));
     }
+//    Can be used later for exception handline of cart missing
+//    @ExceptionHandler(CartNotFound.class)
+//    public ResponseEntity<Map<String, String>> handleCartNotFound(CartNotFound ex) {
+//        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+//                .body(Map.of("error", ex.getMessage())); // always "Invalid email or password"
+//    }
 }
