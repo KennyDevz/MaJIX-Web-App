@@ -7,7 +7,13 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 
 // 1. Accept the new props: buttonText and onButtonClick
-export default function OrderSummary({ buttonText, onButtonClick }) {
+export default function OrderSummary({ totalAmount, buttonText, onButtonClick }) {
+
+  const formattedPrice = Number(totalAmount).toLocaleString("en-PH", {
+        style: "currency",
+        currency: "PHP",
+    });
+
   return (
     <Card sx={{ maxWidth: 400, padding: 2, borderRadius: 2 }}>
       <CardContent>
@@ -45,7 +51,7 @@ export default function OrderSummary({ buttonText, onButtonClick }) {
         
         <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 2 }}>
           <Typography  sx={{fontFamily: 'Poppins', fontSize: '20px', fontWeight: '400' }}>Total</Typography>
-          <Typography  sx={{ fontFamily: 'Poppins', fontSize: '24px', fontWeight: '600' }}>₱89.99</Typography>
+          <Typography  sx={{ fontFamily: 'Poppins', fontSize: '24px', fontWeight: '600' }}>{formattedPrice}</Typography>
         </Box>
 
         <Box sx={{ display: 'flex', gap: 1, marginTop: 2 }}>
