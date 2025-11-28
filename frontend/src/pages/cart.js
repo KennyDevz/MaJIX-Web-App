@@ -12,10 +12,10 @@ import "../styles/Cart.css";
 export default function Cart() {
   const navigate = useNavigate();
   const { user } = useContext(UserContext);
-  const [cartItems, setCartItems] = useState([]);
+  const [cart, setCart] = useState({ cartItems: [], totalAmount: 0 });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
+  
   // Scroll to top on page load
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -25,7 +25,8 @@ export default function Cart() {
       try {
         setLoading(true);
         const response = await axios.get(`http://localhost:8081/api/cart/${user.id}`);
-        setCartItems(response.data);
+        setCart(response.data);
+        console.log(response)//for checking
       } catch (err) {
         console.error("Error fetching cart:", err);
         setError(err.response?.data?.error || err.message);
@@ -63,11 +64,11 @@ export default function Cart() {
           <div className="cart-main-layout">
             {/* List of cart items */}
             <div className="cart-items-list">
-              {cartItems.length === 0 ? (
+              {cart.cartItems.length === 0 ? (
                 <p>Cart is empty</p>
               ) : (
                 <ul>
-                  {cartItems.map((item, id) => (
+                  {cart.cartItems?.map((item, id) => (
                     <CartItem 
                       key={id} 
                       name={item.productName} 
@@ -85,6 +86,7 @@ export default function Cart() {
             {/* Order summary */}
             <div className="cart-summary-container">
               <OrderSummary
+                totalAmount={cart.totalAmount}
                 buttonText="Go to Checkout"
                 onButtonClick={handleCheckoutClick}
               />
