@@ -96,5 +96,21 @@ public class CartService {
         return userMapper.toCartDTO(customerCart);
     }
 
+    public void removeCartItem(Long cartItemId) {
+        // Fetch the cart item, throw if not found
+        CartItem item = cartItemRepository.findById(cartItemId)
+                .orElseThrow(() -> new RuntimeException("CartItem not found"));
+
+        // Remove the item from the cart
+        Cart cart = item.getCart();
+        if (cart != null) {
+            cart.removeCartItem(item);
+            cartRepository.save(cart); // persist the change
+        }
+
+        // Delete the cart item itself
+        cartItemRepository.delete(item);
+    }
+
 
 }
