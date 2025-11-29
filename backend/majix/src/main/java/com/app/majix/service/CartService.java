@@ -60,6 +60,15 @@ public class CartService {
                 .filter(item -> item.getProductVariant().getVariantId().equals(variantId))
                 .findFirst();
 
+        int totalQty = qty;
+        if (existingItem.isPresent()) {
+            totalQty += existingItem.get().getQty(); // sum existing quantity
+        }
+
+        if (totalQty > variant.getQuantityInStock()) {
+            throw new RuntimeException("Requested quantity exceeds stock available. Stock left: "
+                    + variant.getQuantityInStock());
+        }
         if (existingItem.isPresent()) {
             CartItem item = existingItem.get();
             item.setQty(item.getQty() + qty); // increase quantity

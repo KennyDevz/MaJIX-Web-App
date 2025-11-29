@@ -83,7 +83,7 @@ public class UserMapper {
                         item.getProductVariant().getProduct().getProductId(),
                         item.getProductVariant().getVariantId(),
                         item.getProductVariant().getProduct().getName(),
-                        item.getProductVariant().getProduct().getImageUrl(),
+                        item.getProductVariant().getImageUrl(),
                         item.getProductVariant().getSize(),
                         item.getProductVariant().getColor(),
                         item.getSubtotal(),
