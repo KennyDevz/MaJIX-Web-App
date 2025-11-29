@@ -20,8 +20,10 @@ export default function Cart() {
   useEffect(() => {
     window.scrollTo(0, 0);
     if (!user?.id) return;
+    fetchCart();
+  }, [user]);
 
-    const fetchCart = async () => {
+  const fetchCart = async () => {
       try {
         setLoading(true);
         const response = await axios.get(`http://localhost:8081/api/cart/${user.id}`);
@@ -35,8 +37,14 @@ export default function Cart() {
       }
     };
 
+  const handleRemoveCartItem = async (id) => {
+  try {
+    await axios.delete(`http://localhost:8081/api/cart/item/${id}`);
     fetchCart();
-  }, [user]);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
   const handleCheckoutClick = () => {
     navigate('/checkout');
@@ -71,6 +79,8 @@ export default function Cart() {
                   {cart.cartItems?.map((item, id) => (
                     <CartItem 
                       key={id} 
+                      removeCartItem = {handleRemoveCartItem}
+                      id = {item.cartItemId}
                       name={item.productName} 
                       size={item.size} 
                       color={item.color} 

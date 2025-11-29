@@ -86,7 +86,12 @@ export default function CartItem(props) {
           </CardContent>
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'space-between', height: '124px', pr: 1 }}>
             {/* Remove button at the top */}
-              <IconButton size="small" sx={{ textTransform: 'none', color: 'text.primary', alignSelf: 'flex-end' , marginBottom:'20px'}}>
+              <IconButton onClick={()=>{
+                const confirmed = window.confirm("Remove this item from your cart?");
+                  if (confirmed) {
+                     props.removeCartItem(props.id)
+                  }
+                }} size="small" sx={{ textTransform: 'none', color: 'text.primary', alignSelf: 'flex-end' , marginBottom:'20px'}}>
                 <DeleteIcon sx={{ color: 'red' }} />
               </IconButton>
             {/* Add/Subtract controls at the bottom */}
