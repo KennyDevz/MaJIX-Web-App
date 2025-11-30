@@ -13,13 +13,43 @@ public class UserMapper {
         if(customer == null) return null;
         CartDTO cartDTO = null;
 
+//        if (customer.getCart() != null) {
+//            Cart cart = customer.getCart();
+//            // Force lazy load
+//            cart.getCartItems().size();
+//
+//            List<CartItemResponseDTO> cartItemResponseDto = cart.getCartItems().stream()
+//                    .map(item -> new CartItemResponseDTO(
+//                            item.getCartItemId(),
+//                            item.getProductVariant().getProduct().getProductId(),
+//                            item.getProductVariant().getVariantId(),
+//                            item.getProductVariant().getProduct().getName(),
+//                            item.getProductVariant().getProduct().getImageUrl(),
+//                            item.getProductVariant().getSize(),
+//                            item.getProductVariant().getColor(),
+//                            item.getSubtotal(),
+//                            item.getQty()
+//                    ))
+//                    .toList();
+//
+//            cartDTO = new CartDTO(
+//                    cart.getCartId(),
+//                    cartItemResponseDto,
+//                    cart.getTotalAmount()
+//            );
+//        }
 
-        if (customer.getCart() != null) {
-            Cart cart = customer.getCart();
-            // Force lazy load
-            cart.getCartItems().size();
-
-            List<CartItemResponseDTO> cartItemResponseDto = cart.getCartItems().stream()
+        // 1. Find the single ACTIVE cart from the list of carts
+        Cart activeCart = null;
+        if (customer.getCarts() != null) {
+            activeCart = customer.getCarts().stream()
+                    .filter(c -> "ACTIVE".equals(c.getStatus()))
+                    .findFirst()
+                    .orElse(null);
+        }
+        // 2. If an active cart exists, map it to DTO
+        if (activeCart != null) {
+            List<CartItemResponseDTO> cartItemResponseDto = activeCart.getCartItems().stream()
                     .map(item -> new CartItemResponseDTO(
                             item.getCartItemId(),
                             item.getProductVariant().getProduct().getProductId(),
@@ -28,17 +58,19 @@ public class UserMapper {
                             item.getProductVariant().getProduct().getImageUrl(),
                             item.getProductVariant().getSize(),
                             item.getProductVariant().getColor(),
+                            item.getProductVariant().getPrice(),
                             item.getSubtotal(),
                             item.getQty()
                     ))
                     .toList();
 
             cartDTO = new CartDTO(
-                    cart.getCartId(),
+                    activeCart.getCartId(),
                     cartItemResponseDto,
-                    cart.getTotalAmount()
+                    activeCart.getTotalAmount()
             );
         }
+
         return new CustomerDTO(
                 customer.getUserId(),
                 customer.getRole(),
@@ -86,6 +118,7 @@ public class UserMapper {
                         item.getProductVariant().getImageUrl(),
                         item.getProductVariant().getSize(),
                         item.getProductVariant().getColor(),
+                        item.getProductVariant().getPrice(),
                         item.getSubtotal(),
                         item.getQty()
                 ))
@@ -107,6 +140,8 @@ public class UserMapper {
                 // Variant fields
                 cartItem.getProductVariant().getSize(),
                 cartItem.getProductVariant().getColor(),
+
+                cartItem.getProductVariant().getPrice(),
 
                 cartItem.getSubtotal(),
 

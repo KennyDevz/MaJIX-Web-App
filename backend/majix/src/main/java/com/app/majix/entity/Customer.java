@@ -14,8 +14,8 @@ public class Customer extends User{
     private String phonenumber;
 
     // One-to-one relationship with Cart (optional)
-    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
-    private Cart cart;
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Cart> carts;
     
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Review> reviews;
@@ -38,8 +38,6 @@ public class Customer extends User{
 
     public void setPhonenumber(String phonenumber){this.phonenumber = phonenumber;}
 
-
-    public void setCart(Cart cart){this.cart = cart;}
-    public Cart getCart(){return this.cart;}
-
+    public List<Cart> getCarts() { return carts; }
+    public void setCarts(List<Cart> carts) { this.carts = carts; }
 }
