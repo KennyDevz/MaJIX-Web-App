@@ -1,7 +1,8 @@
 import React from 'react';
 import { Box, Typography, TextField } from '@mui/material';
 
-export default function StyledTextField({ label, placeholder }) {
+// 1. We MUST accept 'name', 'value', and 'onChange' here
+export default function StyledTextField({ label, placeholder, value, onChange, name }) {
   return (
     <Box>
       <Typography sx={{ fontFamily: 'Poppins', fontWeight: '400', fontSize: '16px', mb: 1, color: 'black' }}>
@@ -11,22 +12,20 @@ export default function StyledTextField({ label, placeholder }) {
         fullWidth
         variant="outlined"
         placeholder={placeholder}
+        name={name}
+        value={value}
+        onChange={onChange}
+        
         sx={{
-          backgroundColor: '#FFFFFF', // White background
+          backgroundColor: '#FFFFFF', 
           '& .MuiOutlinedInput-root': {
             fontFamily: 'Poppins',
             fontSize: '14px',
             color: '#717182',
-            borderRadius: '12px', // Rounded corners
-            '& fieldset': {
-              borderColor: 'rgba(0, 0, 0, 0.23)', // Standard outline color
-            },
-            '&:hover fieldset': {
-              borderColor: 'rgba(0, 0, 0, 0.87)', // Darker border on hover
-            },
-            '&.Mui-focused fieldset': {
-              borderColor: 'black', // Black border when focused
-            },
+            borderRadius: '12px', 
+            '& fieldset': { borderColor: 'rgba(0, 0, 0, 0.23)' },
+            '&:hover fieldset': { borderColor: 'rgba(0, 0, 0, 0.87)' },
+            '&.Mui-focused fieldset': { borderColor: 'black' },
           },
         }}
       />

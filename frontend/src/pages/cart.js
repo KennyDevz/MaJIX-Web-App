@@ -15,6 +15,8 @@ export default function Cart() {
   const [cart, setCart] = useState({ cartItems: [], totalAmount: 0 });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  const isCartEmpty = cart.cartItems.length === 0;
   
   // Scroll to top on page load
   useEffect(() => {
@@ -47,6 +49,7 @@ export default function Cart() {
 };
 
   const handleCheckoutClick = () => {
+    if (isCartEmpty) return;
     navigate('/checkout');
   };
 
@@ -99,6 +102,7 @@ export default function Cart() {
                 totalAmount={cart.totalAmount}
                 buttonText="Go to Checkout"
                 onButtonClick={handleCheckoutClick}
+                disabled={isCartEmpty}
               />
             </div>
           </div>

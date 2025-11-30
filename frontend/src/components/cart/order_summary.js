@@ -7,7 +7,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 
 // 1. Accept the new props: buttonText and onButtonClick
-export default function OrderSummary({ totalAmount, buttonText, onButtonClick }) {
+export default function OrderSummary({ totalAmount, buttonText, onButtonClick, disabled }) {
 
   const formattedPrice = Number(totalAmount).toLocaleString("en-PH", {
         style: "currency",
@@ -88,6 +88,7 @@ export default function OrderSummary({ totalAmount, buttonText, onButtonClick })
           variant="contained" 
           color="primary" 
           fullWidth 
+          disabled={disabled}
           sx={{ 
             marginTop: 3, 
             paddingY: 1.5, 

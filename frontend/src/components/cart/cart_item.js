@@ -8,9 +8,11 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Box from '@mui/material/Box';
 import {useState} from 'react';
+import { getColorName } from '../../utils/colorUtils';
 
 
 export default function CartItem(props) {
+
     const [quantity, setQuantity] = useState(props.qty);
 
     const formattedPrice = Number(props.price).toLocaleString("en-PH", {
@@ -71,7 +73,7 @@ export default function CartItem(props) {
                 color: 'text.secondary' // Use theme color
               }}
             >
-                Color = {props.color}
+                Color = {getColorName(props.color)}
             </Typography>
             <Typography 
               variant='h5' // Use variant for price
