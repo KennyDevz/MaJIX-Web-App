@@ -19,14 +19,11 @@ public class CustomerService {
 
     @Transactional //Create cart for every user. If either fail, undo db changes or modifications.
     public Customer createCustomer(Customer customer){
-        //save customer first
-        Customer newCustomer = customerRepository.save(customer);
-
-        //automatically create cart for customer after
-        Cart cart = cartService.createCustomerCart(newCustomer);
-        newCustomer.setCart(cart);
-
-        return newCustomer;
+        // 1. Just save the customer.
+        // We DO NOT create a cart here anymore.
+        // The CartService will automatically create an 'ACTIVE' cart
+        // the moment the user adds their first item.
+        return customerRepository.save(customer);
     }
 
     // Optional: find customer by email
@@ -35,9 +32,7 @@ public class CustomerService {
     }
 
     public Cart getUsersCart(Long customerId) {
-        Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new RuntimeException("Customer not found"));
-
-        return customer.getCart();
+        // 2. Use the CartService to find the ACTIVE cart
+        return cartService.getActiveCart(customerId);
     }
 }

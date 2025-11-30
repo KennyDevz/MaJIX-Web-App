@@ -17,12 +17,18 @@ public class Cart {
     private List<CartItem> cartItems = new ArrayList<>();
 
     // Link to Customer
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
     @JsonIgnore
     private Customer customer;
 
+    @OneToOne(mappedBy = "cart")
+    @JsonIgnore
+    private Orders order;
+
     private double totalAmount;
+
+    private String status = "ACTIVE";
 
     public Cart() {
     }
@@ -70,6 +76,14 @@ public class Cart {
     public double getTotalAmount() {
         return totalAmount;
     }
+
+    public String getStatus() { return status; }
+
+    public void setStatus(String status) { this.status = status; }
+
+    public Orders getOrder() { return order; }
+
+    public void setOrder(Orders order) { this.order = order; }
 
     // --- Helper methods to manage cart items ---
     public void addCartItem(CartItem item) {

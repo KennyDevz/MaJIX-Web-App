@@ -10,6 +10,7 @@ public class CartItemResponseDTO {
 
     private String size;
     private String color;
+    private double price;
     private double subtotal;
 
     private int qty;
@@ -17,7 +18,7 @@ public class CartItemResponseDTO {
     public CartItemResponseDTO(){}
 
     public CartItemResponseDTO(Long cartItemId, Long productId, Long variantId, String productName, String productImage
-                                , String size, String color, double subtotal, int qty){
+                                , String size, String color, double price, double subtotal, int qty){
         this.cartItemId = cartItemId;
         this.productId = productId;
         this.variantId = variantId;
@@ -25,6 +26,7 @@ public class CartItemResponseDTO {
         this.productImage = productImage;
         this.size = size;
         this.color = color;
+        this.price = price;
         this.subtotal = subtotal;
         this.qty = qty;
     }
@@ -84,6 +86,10 @@ public class CartItemResponseDTO {
     public void setColor(String color) {
         this.color = color;
     }
+
+    public double getPrice() { return price; }
+
+    public void setPrice(double price) { this.price = price; }
 
     public double getSubtotal() {
         return subtotal;

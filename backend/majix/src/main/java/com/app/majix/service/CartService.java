@@ -12,9 +12,11 @@ import com.app.majix.repository.CartRepository;
 import com.app.majix.repository.CustomerRepository;
 import com.app.majix.repository.ProductVariantRepository;
 import org.springframework.stereotype.Service;
+import jakarta.transaction.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CartService {
@@ -34,15 +36,19 @@ public class CartService {
         this.userMapper = userMapper;
     }
 
-    //creates cart for every customer registration
-    public Cart createCustomerCart(Customer customer){
-        Cart cart = new Cart();
-        cart.setCustomer(customer);//sets cart->user attr
-        customer.setCart(cart);//sets user->cart attr
-        return cartRepository.save(cart);
+    public Cart getActiveCart(Long customerId) {
+        // Try to find a cart with status "ACTIVE"
+        return cartRepository.findByCustomerUserIdAndStatus(customerId, "ACTIVE")
+                .orElseGet(() -> {
+                    // If NO active cart exists, create a new one!
+                    Customer customer = customerRepository.findById(customerId)
+                            .orElseThrow(() -> new RuntimeException("Customer not found"));
+                    Cart newCart = new Cart(customer); // Constructor sets status to ACTIVE
+                    return cartRepository.save(newCart);
+                });
     }
 
-
+    @Transactional
     public Cart addToCart(Long customerId, Long variantId, int qty) {
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
@@ -53,7 +59,7 @@ public class CartService {
             throw new RuntimeException("Requested quantity exceeds stock available");
         }
 
-        Cart cart = customer.getCart();
+        Cart cart = getActiveCart(customerId);
 
         // Check if variant already exists in cart
         Optional<CartItem> existingItem = cart.getCartItems().stream()
@@ -83,25 +89,19 @@ public class CartService {
     }
 
     public List<CartItemResponseDTO> getCartItemsByCustomerId(Long customerId) {
-        List<CartItem> items = cartItemRepository.findByCartCustomerUserId(customerId);
+        // --- 3. CHANGE: Get items from the ACTIVE cart only ---
+        Cart cart = getActiveCart(customerId);
 
-        return items.stream()
+        return cart.getCartItems().stream()
                 .map(userMapper::toCartItemResponseDTO)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     public CartDTO getCartByCustomerId(Long customerId){
-        Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new RuntimeException("Customer not found: " + customerId));
-        Cart customerCart = cartRepository.findCartByCustomerUserId(customer.getUserId());
-        if(customerCart == null){
-            throw new RuntimeException("Cart not found for customer " + customerId);
-        }
+        // --- 4. CHANGE: Get the ACTIVE cart ---
+        Cart customerCart = getActiveCart(customerId);
 
-        // Recalculate totalAmount
         customerCart.calculateTotalAmount();
-
-        // Convert to DTO
         return userMapper.toCartDTO(customerCart);
     }
 
@@ -119,6 +119,15 @@ public class CartService {
 
         // Delete the cart item itself
         cartItemRepository.delete(item);
+    }
+
+    // --- 5. NEW METHOD: For Checkout ---
+    public void closeCart(Long cartId) {
+        Cart cart = cartRepository.findById(cartId).orElse(null);
+        if (cart != null) {
+            cart.setStatus("CLOSED");
+            cartRepository.save(cart);
+        }
     }
 
 

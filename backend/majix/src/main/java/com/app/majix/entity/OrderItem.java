@@ -1,9 +1,7 @@
 package com.app.majix.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 
 @Entity
 public class OrderItem {
@@ -12,51 +10,40 @@ public class OrderItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long orderItemId;
 
-    // Placeholder for relationship (to be replaced with Product entity later)
-    private String product;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id")
+    @JsonIgnore
+    private Orders order;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "variant_id")
+    private ProductVariant variant;
 
     private int qty;
-    private double price;
+    private double priceAtPurchase;
 
-    // --- Constructors ---
     public OrderItem() {}
 
-    public OrderItem(String product, int qty, double price) {
-        this.product = product;
+    public OrderItem(Orders order, ProductVariant variant, int qty, double priceAtPurchase) {
+        this.order = order;
+        this.variant = variant;
         this.qty = qty;
-        this.price = price;
+        this.priceAtPurchase = priceAtPurchase;
     }
 
-    // --- Getters and Setters ---
-    public Long getOrderItemId() {
-        return orderItemId;
-    }
+    // Getters and Setters
+    public Long getOrderItemId() { return orderItemId; }
+    public void setOrderItemId(Long orderItemId) { this.orderItemId = orderItemId; }
 
-    public void setOrderItemId(Long orderItemId) {
-        this.orderItemId = orderItemId;
-    }
+    public Orders getOrder() { return order; }
+    public void setOrder(Orders order) { this.order = order; }
 
-    public String getProduct() {
-        return product;
-    }
+    public ProductVariant getVariant() { return variant; }
+    public void setVariant(ProductVariant variant) { this.variant = variant; }
 
-    public void setProduct(String product) {
-        this.product = product;
-    }
+    public int getQty() { return qty; }
+    public void setQty(int qty) { this.qty = qty; }
 
-    public int getQty() {
-        return qty;
-    }
-
-    public void setQty(int qty) {
-        this.qty = qty;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
+    public double getPriceAtPurchase() { return priceAtPurchase; }
+    public void setPriceAtPurchase(double priceAtPurchase) { this.priceAtPurchase = priceAtPurchase; }
 }
