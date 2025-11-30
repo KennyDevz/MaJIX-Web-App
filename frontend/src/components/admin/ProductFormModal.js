@@ -1,12 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { UploadImageService } from '../../services/UploadImageService'; 
-import '../../styles/admin/ProductFormModal.css'; 
+import { UploadImageService } from '../../services/UploadImageService';
+import '../../styles/admin/ProductFormModal.css';
 
 const API_BASE_URL = 'http://localhost:8081/api/products';
 
+// --- 1. REMOVED COLOR_PRESETS ---
+// We no longer need the hardcoded list or maps.
+
+// --- 2. NEW HELPER: Convert Name to Hex using Browser API ---
+const nameToHex = (name) => {
+  if (!name) return null;
+  const ctx = document.createElement('canvas').getContext('2d');
+  ctx.fillStyle = '#ffffff';
+  ctx.fillStyle = name;
+  const computed = ctx.fillStyle;
+  // If it changed from white, or if the user actually typed white
+  if (computed !== '#ffffff' || name.toLowerCase() === 'white') {
+    return computed;
+  }
+  return null; // Invalid color name
+};
+
 const BLANK_UI_VARIANT = {
-  color: '#000000',
+  colorName: 'Black',
+  colorHex: '#000000',
   price: 0,
   imageUrl: '',
   imageFile: null,
@@ -18,31 +36,30 @@ const BLANK_UI_VARIANT = {
 
 export default function ProductFormModal({ productToEdit, onClose, onSuccess }) {
   
-  // --- 1. Smart State Initialization ---
   const [product, setProduct] = useState({ name: '', description: '', category: '' });
   const [uiVariants, setUiVariants] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
-  // Check if we are in "Edit Mode"
   const isEditMode = productToEdit != null;
 
   useEffect(() => {
     if (isEditMode) {
-      // --- EDIT MODE ---
       setProduct({
         name: productToEdit.name,
         description: productToEdit.description,
         category: productToEdit.category,
       });
 
-      //Logic para ma usa ang mga stock quantities per size and color(Possible pa ma mubo ang code if ang products variant entity naay size for S M L XL)
-      // "Condense" the product variants from the database
+      // Condense variants
       const condensed = productToEdit.variants.reduce((acc, dbVariant) => {
-        const color = dbVariant.color;
-        if (!acc[color]) {
-          acc[color] = {
-            color: dbVariant.color,
+        const colorHex = dbVariant.color;
+        
+        if (!acc[colorHex]) {
+          acc[colorHex] = {
+            // Without a preset map, we default the name to the hex code
+            // or the user can rename it manually if they edit
+            colorName: colorHex, 
+            colorHex: colorHex,
             price: dbVariant.price,
             imageUrl: dbVariant.imageUrl,
             imageFile: null,
@@ -52,40 +69,61 @@ export default function ProductFormModal({ productToEdit, onClose, onSuccess }) 
             stockXL: 0, stockXL_id: null,
           };
         }
-        // Assign stock and ID based on size
+        
         switch (dbVariant.size) {
-          case "S": acc[color].stockS = dbVariant.quantityInStock; acc[color].stockS_id = dbVariant.variantId; break;
-          case "M": acc[color].stockM = dbVariant.quantityInStock; acc[color].stockM_id = dbVariant.variantId; break;
-          case "L": acc[color].stockL = dbVariant.quantityInStock; acc[color].stockL_id = dbVariant.variantId; break;
-          case "XL": acc[color].stockXL = dbVariant.quantityInStock; acc[color].stockXL_id = dbVariant.variantId; break;
+          case "S": acc[colorHex].stockS = dbVariant.quantityInStock; acc[colorHex].stockS_id = dbVariant.variantId; break;
+          case "M": acc[colorHex].stockM = dbVariant.quantityInStock; acc[colorHex].stockM_id = dbVariant.variantId; break;
+          case "L": acc[colorHex].stockL = dbVariant.quantityInStock; acc[colorHex].stockL_id = dbVariant.variantId; break;
+          case "XL": acc[colorHex].stockXL = dbVariant.quantityInStock; acc[colorHex].stockXL_id = dbVariant.variantId; break;
           default: break;
         }
         return acc;
       }, {});
       setUiVariants(Object.values(condensed));
     } else {
-      // --- ADD MODE ---
-      // We are adding, so start with a blank form
       setProduct({ name: '', description: '', category: '' });
       setUiVariants([{ ...BLANK_UI_VARIANT }]);
     }
-  }, [productToEdit, isEditMode]); // Rerun this logic if the product to edit changes
+  }, [productToEdit, isEditMode]);
 
-  
-  // --- (All event handlers are identical to EditProductForm) ---
   const handleProductChange = (e) => {
     const { name, value } = e.target;
     setProduct(prevProduct => ({ ...prevProduct, [name]: value }));
   };
 
+  // --- 3. UPDATED HANDLER: Smart Sync without Presets ---
   const handleVariantChange = (index, e) => {
     const { name, value, files } = e.target;
+    
     const newVariants = uiVariants.map((variant, i) => {
-      if (i === index) {
-        if (files) return { ...variant, imageFile: files[0], imageUrl: '' };
-        return { ...variant, [name]: value };
+      if (i !== index) return variant;
+
+      if (files) return { ...variant, imageFile: files[0], imageUrl: '' };
+
+      // Case A: User types a name (e.g. "Salmon" or "#123456")
+      if (name === 'colorName') {
+        // Try to convert whatever they typed into a Hex
+        const convertedHex = nameToHex(value);
+        
+        // If it's a valid color, update the picker too
+        // If not (they are still typing), keep the old picker value
+        return { 
+          ...variant, 
+          colorName: value, 
+          colorHex: convertedHex || variant.colorHex 
+        };
       }
-      return variant;
+      
+      // Case B: User picks from the Color Picker
+      if (name === 'colorHex') {
+         return { 
+           ...variant, 
+           colorHex: value, 
+           colorName: value // Update text to match the hex code
+         };
+      }
+
+      return { ...variant, [name]: value };
     });
     setUiVariants(newVariants);
   };
@@ -93,21 +131,17 @@ export default function ProductFormModal({ productToEdit, onClose, onSuccess }) 
   const addVariant = () => setUiVariants([...uiVariants, { ...BLANK_UI_VARIANT }]);
   const removeVariant = (index) => setUiVariants(uiVariants.filter((_, i) => i !== index));
 
-  
-  // --- 2. Smart HandleSubmit ---
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
     try {
-      // --- A. Upload Images ---
       const variantImageUploads = uiVariants.map(v => 
         v.imageFile ? UploadImageService(v.imageFile) : Promise.resolve(v.imageUrl)
       );
       const uploadedImageUrls = await Promise.all(variantImageUploads);
 
-      // --- B. "Un-condense" Variants (same as EditForm) ---
       const finalVariantsForBackend = uiVariants.flatMap((uiVariant, index) => {
         const imageUrl = uploadedImageUrls[index];
         const price = parseFloat(uiVariant.price);
@@ -120,7 +154,7 @@ export default function ProductFormModal({ productToEdit, onClose, onSuccess }) 
         return sizes.map(sizeInfo => ({
           variantId: sizeInfo.id,
           size: sizeInfo.name,
-          color: uiVariant.color,
+          color: uiVariant.colorHex, // Always send the Hex to backend
           price: price,
           quantityInStock: sizeInfo.stock,
           imageUrl: imageUrl,
@@ -132,13 +166,10 @@ export default function ProductFormModal({ productToEdit, onClose, onSuccess }) 
         throw new Error("First variant image is missing or failed to upload.");
       }
 
-      // --- C. Build Payload ---
       const payload = {
         product: { ...product, imageUrl: mainProductImageUrl },
         variants: finalVariantsForBackend,
       };
-
-
 
       if (isEditMode) {
         await axios.put(`${API_BASE_URL}/${productToEdit.productId}`, payload);
@@ -156,20 +187,14 @@ export default function ProductFormModal({ productToEdit, onClose, onSuccess }) 
     }
   };
 
-  // --- 3. Render with Modal Backdrop ---
- return (
-    <div className="modal-backdrop">
+  return (
+    <div className="modal-backdrop" onClick={onClose}>
       <div className="modal-content" onClick={e => e.stopPropagation()}>
 
         <div className="modal-header">
           <div>
             <h2>{isEditMode ? 'Edit Product' : 'Add New Product'}</h2>
-            <p>
-              {isEditMode 
-                ? 'Update the product details, variants, pricing, and stock.'
-                : 'Create a new product with variant details, pricing, images, and stock quantities.'
-              }
-            </p>
+            <p>{isEditMode ? 'Update product details.' : 'Create a new product.'}</p>
           </div>
           <button onClick={onClose} className="modal-close-btn">&times;</button>
         </div>
@@ -177,29 +202,14 @@ export default function ProductFormModal({ productToEdit, onClose, onSuccess }) 
         <div className="modal-body">
           <form id="product-form" onSubmit={handleSubmit}>
             
-            {/* --- Product Details --- */}
             <div className="form-group">
               <label>Product Name </label>
-              <input 
-                type="text" 
-                name="name" 
-                value={product.name} 
-                onChange={handleProductChange} 
-                className="form-input"
-                placeholder="Enter product name..."
-                required 
-              />
+              <input type="text" name="name" value={product.name} onChange={handleProductChange} className="form-input" required />
             </div>
             
             <div className="form-group">
               <label>Category </label>
-              <select 
-                name="category" 
-                value={product.category} 
-                onChange={handleProductChange} 
-                className="form-select" 
-                required
-              >
+              <select name="category" value={product.category} onChange={handleProductChange} className="form-select" required >
                 <option value="">Select Category</option>
                 <option value="T-Shirt">T-shirt</option>
                 <option value="Pants">Pants</option>
@@ -211,53 +221,40 @@ export default function ProductFormModal({ productToEdit, onClose, onSuccess }) 
 
             <div className="form-group">
               <label>Description</label>
-              <textarea
-                name="description" 
-                value={product.description} 
-                onChange={handleProductChange} 
-                className="form-textarea"
-                placeholder="Enter product description..."
-              />
+              <textarea name="description" value={product.description} onChange={handleProductChange} className="form-textarea" />
             </div>
 
-            {/* --- Variants Section --- */}
             <div className="variants-section">
               <div className="variants-header">
                 <h3>Variant Inventory</h3>
-                <button type="button" onClick={addVariant} className="add-variant-btn">
-                  + Add Variant
-                </button>
+                <button type="button" onClick={addVariant} className="add-variant-btn"> + Add Variant </button>
               </div>
 
               {uiVariants.map((variant, index) => (
                 <div className="variant-card" key={index}>
                   
+                  {/* --- 4. SIMPLIFIED COLOR INPUT (No Dropdown) --- */}
                   <div className="form-group">
-                    <label>Color *</label>
+                    <label>Color</label>
                     <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                      
                       {/* The Color Picker */}
                       <input 
                         type="color" 
-                        name="color"
-                        // Use a valid hex. Default to black if state is invalid
-                        value={variant.color && /^#[0-9A-F]{6}$/i.test(variant.color) ? variant.color : '#000000'}
+                        name="colorHex"
+                        value={variant.colorHex}
                         onChange={(e) => handleVariantChange(index, e)}
-                        style={{
-                          width: '50px', 
-                          height: '40px', 
-                          padding: '0 5px',
-                          border: '1.33px solid #D1D5DC', // Match form-input
-                          borderRadius: '8px'
-                        }}
+                        style={{ width: '50px', height: '38px', padding: '0 5px', border: '1.33px solid #D1D5DC', borderRadius: '8px', cursor: 'pointer' }}
                       />
-                      {/* The Text Input */}
+
+                      {/* The Text Input - Now accepts ANY valid color name */}
                       <input 
                         type="text" 
-                        name="color" 
-                        value={variant.color} 
+                        name="colorName" 
+                        value={variant.colorName} 
                         onChange={(e) => handleVariantChange(index, e)} 
                         className="form-input"
-                        placeholder="e.g., #FF0000"
+                        placeholder="e.g. Red, Navy, #FF0000"
                         required
                       />
                     </div>
@@ -265,25 +262,12 @@ export default function ProductFormModal({ productToEdit, onClose, onSuccess }) 
                   
                   <div className="form-group">
                     <label>Price (₱) </label>
-                    <input 
-                      type="number" 
-                      name="price" 
-                      value={variant.price} 
-                      onChange={(e) => handleVariantChange(index, e)} 
-                      className="form-input"
-                      required
-                    />
+                    <input type="number" name="price" value={variant.price} onChange={(e) => handleVariantChange(index, e)} className="form-input" required />
                   </div>
 
                   <div className="form-group">
-                    <label>Variant Image  {index === 0 && <span> (Will be default product image)</span>}
-                    </label>
-                    <input 
-                      type="file" 
-                      name="imageFile" 
-                      onChange={(e) => handleVariantChange(index, e)} 
-                      className="form-input"
-                    />
+                    <label>Variant Image {index === 0 && <span> (Default)</span>}</label>
+                    <input type="file" name="imageFile" onChange={(e) => handleVariantChange(index, e)} className="form-input" />
                     {!variant.imageFile && variant.imageUrl && (
                       <div style={{fontSize: '0.8em', color: '#555', display: 'flex', alignItems: 'center', gap: '5px'}}>
                         Current: <img src={variant.imageUrl} alt="variant" style={{width: '30px', height: '30px'}} />
@@ -292,28 +276,22 @@ export default function ProductFormModal({ productToEdit, onClose, onSuccess }) 
                   </div>
                   
                   <div className="stock-grid">
-                    <div className="form-group-inline">
-                      <label>Size S</label>
-                      <input type="number" name="stockS" value={variant.stockS} onChange={(e) => handleVariantChange(index, e)} className="form-input" />
-                    </div>
-                    <div className="form-group-inline">
-                      <label>Size M</label>
-                      <input type="number" name="stockM" value={variant.stockM} onChange={(e) => handleVariantChange(index, e)} className="form-input" />
-                    </div>
-                    <div className="form-group-inline">
-                      <label>Size L</label>
-                      <input type="number" name="stockL" value={variant.stockL} onChange={(e) => handleVariantChange(index, e)} className="form-input" />
-                    </div>
-                    <div className="form-group-inline">
-                      <label>Size XL</label>
-                      <input type="number" name="stockXL" value={variant.stockXL} onChange={(e) => handleVariantChange(index, e)} className="form-input" />
-                    </div>
+                    {['S', 'M', 'L', 'XL'].map(size => (
+                      <div className="form-group-inline" key={size}>
+                        <label>{size}</label>
+                        <input 
+                          type="number" 
+                          name={`stock${size}`} 
+                          value={variant[`stock${size}`]} 
+                          onChange={(e) => handleVariantChange(index, e)} 
+                          className="form-input" 
+                        />
+                      </div>
+                    ))}
                   </div>
                   
                   {uiVariants.length > 1 && (
-                    <button type="button" onClick={() => removeVariant(index)} className="remove-variant-btn">
-                      Remove Variant
-                    </button>
+                    <button type="button" onClick={() => removeVariant(index)} className="remove-variant-btn">Remove Variant</button>
                   )}
                 </div>
               ))}
@@ -322,22 +300,9 @@ export default function ProductFormModal({ productToEdit, onClose, onSuccess }) 
         </div>
 
         <div className="modal-footer">
-
-            {error && (
-                <div style={{ color: 'red', marginRight: 'auto', fontFamily: 'Inter', fontSize: '14px' }}>
-                Error: {error}
-                </div>
-            )}
-            
-          <button type="button" onClick={onClose} className="btn-cancel">
-            Cancel
-          </button>
-          <button 
-            type="submit" 
-            form="product-form" 
-            disabled={loading} 
-            className="btn-submit"
-          >
+            {error && <div style={{ color: 'red', marginRight: 'auto', fontSize: '14px' }}>Error: {error}</div>}
+          <button type="button" onClick={onClose} className="btn-cancel">Cancel</button>
+          <button type="submit" form="product-form" disabled={loading} className="btn-submit">
             {loading ? 'Saving...' : (isEditMode ? 'Save Changes' : 'Add Product')}
           </button>
         </div>
@@ -345,4 +310,4 @@ export default function ProductFormModal({ productToEdit, onClose, onSuccess }) 
       </div>
     </div>
   );
-}
+} 
