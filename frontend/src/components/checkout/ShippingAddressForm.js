@@ -2,11 +2,18 @@ import React from 'react';
 import { Typography, Paper, Grid } from '@mui/material';
 import StyledTextField from './StyledTextField'; 
 
-export default function ShippingAddressForm() {
+// 1. Accept 'address' and 'setAddress' props
+export default function ShippingAddressForm({ address, setAddress }) {
+  
+  // 2. Create a generic handler for all fields
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setAddress(prev => ({ ...prev, [name]: value }));
+  };
+
   return (
     <Paper 
-      elevation={0} 
-      variant="outlined"
+      elevation={0} variant="outlined"
       sx={{ 
         p: '21px 25px 25px 25px', 
         borderRadius: '20px', 
@@ -19,33 +26,36 @@ export default function ShippingAddressForm() {
       </Typography>
       
       <Grid container spacing={2}>
-        {/* Row 1: Country */}
         <Grid item xs={12}>
-          <StyledTextField label="Country" placeholder="e.g. Philippines" />
+          <StyledTextField 
+            label="Country" 
+            name="country" // 3. Add 'name' prop matching state
+            value={address.country} // 4. Bind 'value'
+            onChange={handleChange} // 5. Bind 'onChange'
+            placeholder="e.g. Philippines" 
+          />
         </Grid>
         
-        {/* Row 2: Street */}
         <Grid item xs={12}>
-          <StyledTextField label="Street" placeholder="123 Main Street" />
-        </Grid>
-        
-        {/* Row 3: Apt */}
-        <Grid item xs={12}>
-          <StyledTextField label="Apartment, suite, etc. (optional)" placeholder="Apt 4B" />
+          <StyledTextField 
+            label="Street Address" 
+            name="street" 
+            value={address.street} 
+            onChange={handleChange} 
+            placeholder="House No., Building, Street Name" 
+          />
         </Grid>
 
-        {/* Row 4: Province, City, Zipcode (Forced 3-column) */}
         <Grid item xs={4}>
-          <StyledTextField label="Province" placeholder="e.g. Cebu" />
+          <StyledTextField label="Province" name="province" value={address.province} onChange={handleChange} placeholder="e.g. Cebu" />
         </Grid>
         <Grid item xs={4}>
-          <StyledTextField label="City" placeholder="e.g. Cebu City" />
+          <StyledTextField label="City" name="city" value={address.city} onChange={handleChange} placeholder="e.g. Cebu City" />
         </Grid>
         <Grid item xs={4}>
-          <StyledTextField label="Zipcode" placeholder="e.g. 6000" />
+          <StyledTextField label="Zipcode" name="zipCode" value={address.zipCode} onChange={handleChange} placeholder="e.g. 6000" />
         </Grid>
       </Grid>
     </Paper>
   );
 }
-
