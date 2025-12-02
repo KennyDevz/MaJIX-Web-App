@@ -71,23 +71,6 @@ export default function AdminOrderPage() {
                 <span className="order-total-price">${order.totalAmount?.toLocaleString()}</span>
               </div>
 
-<<<<<<< Updated upstream
-            {/* Order Footer (Items List) */}
-            <div className="order-card-footer">
-              <h4>Order Items</h4>
-              {order.items?.map((item, index) => (
-                <div className="order-item-row" key={index}>
-                  <div className="item-details">
-                          <span className="item-name">
-                            {item.productName} <small>({item.size} / {item.color})</small>
-                          </span>
-                          <span className="item-qty">x{item.quantity}</span>
-                        </div>
-
-                        <span className="item-price">${item.subtotal?.toFixed(2)}</span>
-                      </div>
-              ))}
-=======
               {/* BODY (Customer Info) */}
               <div className="order-card-body">
                 <div className="order-detail-section">
@@ -174,7 +157,6 @@ export default function AdminOrderPage() {
                   </select>
               </div>
 
->>>>>>> Stashed changes
             </div>
           ))
         )}
