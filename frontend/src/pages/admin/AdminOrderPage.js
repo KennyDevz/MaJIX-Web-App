@@ -87,13 +87,17 @@ export default function AdminOrderPage() {
             {/* Order Footer (Items List) */}
             <div className="order-card-footer">
               <h4>Order Items</h4>
-              {order.items.map((item) => (
-                <div className="order-item-row" key={item.id}>
-                  <span>
-                    {item.name} (x{item.quantity})
-                  </span>
-                  <span>${(item.price * item.quantity).toFixed(2)}</span>
-                </div>
+              {order.items?.map((item, index) => (
+                <div className="order-item-row" key={index}>
+                  <div className="item-details">
+                          <span className="item-name">
+                            {item.productName} <small>({item.size} / {item.color})</small>
+                          </span>
+                          <span className="item-qty">x{item.quantity}</span>
+                        </div>
+
+                        <span className="item-price">${item.subtotal?.toFixed(2)}</span>
+                      </div>
               ))}
             </div>
           </div>
