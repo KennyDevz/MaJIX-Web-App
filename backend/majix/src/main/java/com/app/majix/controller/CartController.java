@@ -4,8 +4,10 @@ import com.app.majix.dto.CartDTO;
 import com.app.majix.dto.CartItemResponseDTO;
 import com.app.majix.entity.Cart;
 import com.app.majix.entity.CartItem;
+import com.app.majix.entity.ProductVariant;
 import com.app.majix.mapper.UserMapper;
 import com.app.majix.repository.CartItemRepository;
+import com.app.majix.repository.ProductVariantRepository;
 import com.app.majix.service.CartService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,11 +20,11 @@ import java.util.Map;
 @CrossOrigin(origins = "http://localhost:3000")
 public class CartController {
     private final CartService cartService;
-    private final CartItemRepository cartItemRepository;
+    private final ProductVariantRepository productVariantRepository;
 
-    public CartController(CartService cartService, CartItemRepository cartItemRepository){
+    public CartController(CartService cartService, ProductVariantRepository productVariantRepository){
         this.cartService = cartService;
-        this.cartItemRepository = cartItemRepository;
+        this.productVariantRepository = productVariantRepository;
     }
 
     @PostMapping("/add")
