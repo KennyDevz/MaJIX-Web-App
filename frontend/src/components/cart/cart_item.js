@@ -7,13 +7,10 @@ import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Box from '@mui/material/Box';
-import {useState} from 'react';
 import { getColorName } from '../../utils/colorUtils';
 
 
 export default function CartItem(props) {
-
-    const [quantity, setQuantity] = useState(props.qty);
 
     const formattedPrice = Number(props.price).toLocaleString("en-PH", {
         style: "currency",
@@ -21,11 +18,11 @@ export default function CartItem(props) {
     });
 
     const handleAdd = () => {
-        setQuantity(quantity + 1);
+        props.incrementQty(props.id);
     };
     const handleRemove = () => {
-        if (quantity > 1) {
-            setQuantity(quantity - 1);
+        if (props.qty > 1) {
+            props.decrementQty(props.id);
         }
     };
 
@@ -98,13 +95,13 @@ export default function CartItem(props) {
               </IconButton>
             {/* Add/Subtract controls at the bottom */}
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 , border:'1px', padding:'1px 8px', borderRadius:'15px', backgroundColor:'#F0F0F0'}}>
-              <IconButton size="small" onClick={handleRemove}>
+              <IconButton size="small" onClick={handleRemove} disabled={props.qty <= 1 || props.stock <= 0} >
                 <RemoveIcon />
               </IconButton>
               <Typography variant="body1" sx={{ fontFamily: 'Poppins' }}>
-                {quantity}
+                {props.qty}
               </Typography>
-              <IconButton size="small" onClick={handleAdd}>
+              <IconButton size="small" onClick={handleAdd} disabled={props.qty >= props.stock}>
                 <AddIcon />
               </IconButton>
             </Box>
