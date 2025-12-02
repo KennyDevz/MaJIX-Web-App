@@ -29,4 +29,15 @@ public class OrderController {
     public ResponseEntity<List<OrderResponseDTO>> getAllOrders() {
         return ResponseEntity.ok( orderService.getAllOrders());
     }
+
+
+    @PutMapping("/{orderId}/status")
+    public ResponseEntity<String> updateStatus(@PathVariable Long orderId, @RequestParam String status) {
+        try {
+            orderService.updateOrderStatus(orderId, status);
+            return ResponseEntity.ok("Status updated successfully");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error updating status: " + e.getMessage());
+        }
+    }
 }

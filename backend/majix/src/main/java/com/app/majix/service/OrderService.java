@@ -167,4 +167,11 @@ public class OrderService {
             );
         }).collect(Collectors.toList());
      }
+
+     public void updateOrderStatus(Long orderId, String newStatus) {
+         Orders order = orderRepository.findById(orderId)
+                 .orElseThrow(() -> new RuntimeException("Order not found"));
+         order.setStatus(newStatus);
+         orderRepository.save(order);
+     }
 }
