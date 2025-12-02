@@ -9,12 +9,15 @@ public class OrderResponseDTO {
     private String orderDate;
     private String paymentMethod;
     private String shippingAddress;
+
+    private String customerName;
+    private String customerEmail;
     private List<OrderItemDTO> items;
 
     // Optional: You can include the linked Cart ID if you want to show it
     private Long linkedCartId;
 
-    public OrderResponseDTO(Long orderId, String status, double totalAmount, String orderDate, String paymentMethod, String shippingAddress, List<OrderItemDTO> items, Long linkedCartId) {
+    public OrderResponseDTO(Long orderId, String status, double totalAmount, String orderDate, String paymentMethod, String shippingAddress, List<OrderItemDTO> items, Long linkedCartId, String customerName, String customerEmail) {
         this.orderId = orderId;
         this.status = status;
         this.totalAmount = totalAmount;
@@ -23,9 +26,17 @@ public class OrderResponseDTO {
         this.shippingAddress = shippingAddress;
         this.items = items;
         this.linkedCartId = linkedCartId;
+        this.customerName = customerName;
+        this.customerEmail = customerEmail;
     }
 
     // --- Getters and Setters ---
+    public String getCustomerName() { return customerName; }
+    public void setCustomerName(String customerName) { this.customerName = customerName; }
+
+    public String getCustomerEmail() { return customerEmail; }
+    public void getCustomerEmail(String customerEmail) { this.customerEmail = customerEmail; }
+
     public Long getOrderId() { return orderId; }
     public void setOrderId(Long orderId) { this.orderId = orderId; }
     public String getStatus() { return status; }
