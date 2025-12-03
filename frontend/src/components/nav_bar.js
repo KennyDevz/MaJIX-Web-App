@@ -43,11 +43,13 @@ function NavBar(){
     }
 
     const handleLogout = ()=> {
-      setUser(null); 
-      alert("Logged Out");
-      localStorage.removeItem("user");
-      navigate("/",{replace: true})
-      setShowDropDown(!showDropDown)    
+        if(window.confirm("Are you sure you want to logout?")){
+            setUser(null); 
+            localStorage.removeItem("user");
+            navigate("/",{replace: true})
+            setShowDropDown(!showDropDown)
+            alert("You have been logged out successfully!")
+        }    
     }
 
     return(
