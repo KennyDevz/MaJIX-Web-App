@@ -12,7 +12,7 @@ public class Product {
 
     private String name; 
     
-    @Lob // For longer text, as in 'description (text)' 
+    @Lob 
     private String description;
     
     private String category; 
@@ -36,6 +36,13 @@ public class Product {
         this.description = description;
         this.category = category;
         this.imageUrl = imageUrl;
+    }
+
+    public int getTotalStock(){
+        if (variants == null){
+            return 0;
+        }
+        return variants.stream().mapToInt(ProductVariant::getQuantityInStock).sum();
     }
 
     // --- Getters and Setters ---
