@@ -23,8 +23,8 @@ function Footer() {
         <div className="footer-section links-group">
           <div className="link-column">
             <h4>COMPANY</h4>
-            <a href="/about" className="footer-link">About</a>
-            <a href="/features" className="footer-link">Features</a>
+            <a href="/AboutUs" className="footer-link">About</a>
+            <a href="/Shop" className="footer-link">Features</a>
             <a href="/works" className="footer-link">Works</a>
             <a href="/career" className="footer-link">Career</a>
           </div>
@@ -41,7 +41,7 @@ function Footer() {
         {/* Right Section: F.A.Q. Links */}
         <div className="footer-section link-column faq-group">
           <h4>F.A.Q.</h4>
-          <a href="/account" className="footer-link">Account</a>
+          <a href="/Profile" className="footer-link">Account</a>
           <a href="/deliveries" className="footer-link">Manage Deliveries</a>
           <a href="/orders" className="footer-link">Orders</a>
           <a href="/payments" className="footer-link">Payments</a>
