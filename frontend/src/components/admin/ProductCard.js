@@ -2,8 +2,7 @@ import React from 'react';
 import '../../styles/admin/ProductCard.css';
 
 export default function ProductCard({ product, onDelete, onEdit }) {
-  const displayVariant = product.variants[0];
-  const stock = displayVariant ? displayVariant.quantityInStock : 0;
+  const stock = product.totalStock || 0;
 
   return (
     <div className="product-card">

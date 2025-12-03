@@ -4,6 +4,7 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import Rating from "@mui/material/Rating";
 import { UserContext } from "../../context/UserContext";
+import { getColorName } from '../../utils/colorUtils';
 
 export default function ProductDetails({ product }) {
   const {user} = useContext(UserContext)
@@ -155,7 +156,7 @@ export default function ProductDetails({ product }) {
           {availableColors.map((color, i) => (
             <Box
               key={i}
-              title={color}
+              title={getColorName(color)}
               onClick={() => setSelectedColor(color)}
               sx={{
                 width: 37,

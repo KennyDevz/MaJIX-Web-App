@@ -6,6 +6,7 @@ import Rating from '@mui/material/Rating';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { Link } from 'react-router-dom';
+import { getColorName } from '../utils/colorUtils';
 
 /*Version 3*/
 export default function ProductCard({ product }) {
@@ -28,6 +29,8 @@ export default function ProductCard({ product }) {
   // --- 4. Handle Rating (Not in backend yet) ---
   const rating = 4.5; 
 
+  const availableColors = [...new Set(product.variants.map(v => v.color))];
+
   return (
     <Card sx={{ width: 250, borderRadius: '20px'}}>
       <CardActionArea component={Link} to={`/Details/${product.productId}`}>
@@ -44,6 +47,15 @@ export default function ProductCard({ product }) {
         <Box sx={{display: "flex"}}>
             <Rating name='read-only' value={rating} precision={.5} readOnly/>
             <Typography gutterBottom >{rating}/5</Typography>
+        </Box>
+        <Box sx={{ display: 'flex', gap: 0.5, mb: 1.5, flexWrap: 'wrap', height: '20px' }}>
+          {availableColors.map((color, index) => (
+            <Box
+              key={index}
+              title={getColorName(color)} 
+              sx={{width: 16, height: 16, borderRadius: '50%', backgroundColor: color, border: '1px solid rgba(0,0,0,0.1)', boxShadow: color.toUpperCase() === '#FFFFFF' ? 'inset 0 0 0 1px #ccc' : 'none'}}
+            />
+          ))}
         </Box>
         <div style={{display: 'flex', flexDirection: 'row', alignItems:'center', gap:'5px'}}>
           <Typography sx={{fontWeight: "bold", fontSize: "1.5rem"}}>{formattedPrice}</Typography>
