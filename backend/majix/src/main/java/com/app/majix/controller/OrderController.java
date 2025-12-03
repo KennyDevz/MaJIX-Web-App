@@ -2,9 +2,11 @@ package com.app.majix.controller;
 
 import com.app.majix.dto.OrderRequestDTO;
 import com.app.majix.dto.OrderResponseDTO;
+import com.app.majix.entity.Orders;
 import com.app.majix.service.OrderService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -21,5 +23,21 @@ public class OrderController {
     public ResponseEntity<OrderResponseDTO> placeOrder(@RequestBody OrderRequestDTO request) {
         OrderResponseDTO order = orderService.placeOrder(request);
         return ResponseEntity.ok(order);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<OrderResponseDTO>> getAllOrders() {
+        return ResponseEntity.ok( orderService.getAllOrders());
+    }
+
+
+    @PutMapping("/{orderId}/status")
+    public ResponseEntity<String> updateStatus(@PathVariable Long orderId, @RequestParam String status) {
+        try {
+            orderService.updateOrderStatus(orderId, status);
+            return ResponseEntity.ok("Status updated successfully");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error updating status: " + e.getMessage());
+        }
     }
 }
