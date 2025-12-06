@@ -7,6 +7,7 @@ import com.app.majix.entity.*;
 import com.app.majix.repository.CartRepository;
 import com.app.majix.repository.CustomerRepository;
 import com.app.majix.repository.OrderRepository;
+import com.app.majix.repository.ProductVariantRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -23,12 +24,14 @@ public class OrderService {
     private final CustomerRepository customerRepository;
     private final CartRepository cartRepository;
     private final CartService cartService; // Need this to close the cart properly
+    private final ProductVariantRepository productVariantRepository;
 
-    public OrderService(OrderRepository orderRepository, CustomerRepository customerRepository, CartRepository cartRepository, CartService cartService) {
+    public OrderService(OrderRepository orderRepository, CustomerRepository customerRepository, CartRepository cartRepository, CartService cartService, ProductVariantRepository productVariantRepository, ProductVariantRepository productVariantRepository1) {
         this.orderRepository = orderRepository;
         this.customerRepository = customerRepository;
         this.cartRepository = cartRepository;
         this.cartService = cartService;
+        this.productVariantRepository = productVariantRepository;
     }
 
     @Transactional
@@ -62,10 +65,23 @@ public class OrderService {
                 request.getProvince() + ", " + request.getCountry() + " " + request.getZipCode();
         order.setShippingAddress(fullAddress);
 
-        //
+        for (CartItem cartItem : cart.getCartItems()) {
+            ProductVariant variant = cartItem.getProductVariant();
 
+            // Check if sufficient stock is available
+            if (variant.getQuantityInStock() < cartItem.getQty()) {
+                throw new RuntimeException("Out of stock: " + variant.getProduct().getName()
+                        + " (Size: " + variant.getSize() + ", Color: " + variant.getColor() + ")");
+            }
 
-        // 6. Create Order Items (Copy from Cart)
+            // Subtract stock
+            int newStock = variant.getQuantityInStock() - cartItem.getQty();
+            variant.setQuantityInStock(newStock);
+
+            // Save the updated variant to the database
+            productVariantRepository.save(variant);
+        }
+
         List<OrderItem> orderItems = new ArrayList<>();
         for (CartItem cartItem : cart.getCartItems()) {
             OrderItem orderItem = new OrderItem(
