@@ -4,18 +4,21 @@ import com.app.majix.dto.OrderItemDTO;
 import com.app.majix.dto.OrderRequestDTO;
 import com.app.majix.dto.OrderResponseDTO;
 import com.app.majix.entity.*;
+import com.app.majix.exception.OutOfStockException;
 import com.app.majix.repository.CartRepository;
 import com.app.majix.repository.CustomerRepository;
 import com.app.majix.repository.OrderRepository;
 import com.app.majix.repository.ProductVariantRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import com.app.majix.utils.ColorUtils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
 
 @Service
 public class OrderService {
@@ -56,8 +59,6 @@ public class OrderService {
         order.setStatus("PENDING");
         order.setTotalAmount(cart.getTotalAmount());
         order.setPaymentMethod(request.getPaymentMethod());
-
-        // 4. Link the Cart (1:1 Relationship) - This satisfies your professor's requirement
         order.setCart(cart);
 
         // 5. Snapshot Address
@@ -65,40 +66,34 @@ public class OrderService {
                 request.getProvince() + ", " + request.getCountry() + " " + request.getZipCode();
         order.setShippingAddress(fullAddress);
 
+        List<OrderItem> orderItems = new ArrayList<>();
+
         for (CartItem cartItem : cart.getCartItems()) {
             ProductVariant variant = cartItem.getProductVariant();
 
-            // Check if sufficient stock is available
             if (variant.getQuantityInStock() < cartItem.getQty()) {
-                throw new RuntimeException("Out of stock: " + variant.getProduct().getName()
-                        + " (Size: " + variant.getSize() + ", Color: " + variant.getColor() + ")");
+                throw new OutOfStockException("Out of stock: " + variant.getProduct().getName()
+                        + " (Size: " + variant.getSize() + ", Color: " + ColorUtils.getColorName(variant.getColor()) + ")");
             }
-
-            // Subtract stock
-            int newStock = variant.getQuantityInStock() - cartItem.getQty();
-            variant.setQuantityInStock(newStock);
-
-            // Save the updated variant to the database
+            // B. Deduct Stock
+            variant.setQuantityInStock(variant.getQuantityInStock() - cartItem.getQty());
             productVariantRepository.save(variant);
-        }
-
-        List<OrderItem> orderItems = new ArrayList<>();
-        for (CartItem cartItem : cart.getCartItems()) {
+            // C. Create Order Item
             OrderItem orderItem = new OrderItem(
                     order,
-                    cartItem.getProductVariant(),
+                    variant,
                     cartItem.getQty(),
-                    cartItem.getProductVariant().getPrice()
+                    variant.getPrice() // Ensure this is the price you want (current price vs cart price)
             );
             orderItems.add(orderItem);
         }
+
         order.setOrderItems(orderItems);
 
-        // 7. Save Order
+        // 5. Save Order
         Orders savedOrder = orderRepository.save(order);
 
-        // 8. Close the Cart
-        // We do NOT delete items. We just mark the cart as CLOSED so it's preserved in history.
+        // 6. Close Cart
         cartService.closeCart(cart.getCartId());
 
         // 9. Return Response DTO
