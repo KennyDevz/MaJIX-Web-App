@@ -153,7 +153,8 @@ export default function AdminOrderPage() {
                       <option value="PENDING">PENDING</option>
                       <option value="SHIPPED">SHIPPED</option>
                       <option value="DELIVERED">DELIVERED</option>
-                      <option value="CANCELLED">CANCELLED</option>
+                      {/*<option value="CANCELLED">CANCELLED</option>*/}
+                      
                   </select>
               </div>
 
