@@ -40,4 +40,20 @@ public class OrderController {
             return ResponseEntity.badRequest().body("Error updating status: " + e.getMessage());
         }
     }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<OrderResponseDTO>> getUserOrders(@PathVariable Long userId) {
+        return ResponseEntity.ok(orderService.getOrdersByUser(userId));
+    }
+
+    @PutMapping("/{orderId}/cancel")
+    public ResponseEntity<String> cancelOrder(@PathVariable Long orderId) {
+        try {
+            orderService.cancelOrder(orderId);
+            return ResponseEntity.ok("Order cancelled successfully");
+        } catch (Exception e) {
+            // This message will be sent back to React if they try to cancel a Shipped order
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }
