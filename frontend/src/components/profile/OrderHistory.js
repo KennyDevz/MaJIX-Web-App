@@ -1,40 +1,43 @@
-import React from 'react';
-import { Box, Typography, Stack } from '@mui/material';
-import OrderHistoryItem from './OrderHistoryItem'; // We'll create this next
-
-// Sample data to match your Figma design
-const orders = [
-  {
-    id: 'ORD-2024-001',
-    status: 'Delivered',
-    date: 'October 25, 2024',
-    itemCount: 3,
-    total: '$89.99'
-  },
-  {
-    id: 'ORD-2024-002',
-    status: 'In Transit',
-    date: 'October 20, 2024',
-    itemCount: 2,
-    total: '$149.99'
-  },
-  {
-    id: 'ORD-2024-003',
-    status: 'Delivered',
-    date: 'October 15, 2024',
-    itemCount: 1,
-    total: '$59.99'
-  },
-  {
-    id: 'ORD-2024-004',
-    status: 'Processing',
-    date: 'October 10, 2024',
-    itemCount: 4,
-    total: '$199.99'
-  },
-];
+import React, { useEffect, useState, useContext } from 'react';
+import axios from 'axios';
+import { Box, Typography, Stack, CircularProgress } from '@mui/material';
+import OrderHistoryItem from './OrderHistoryItem';
+import { UserContext } from '../../context/UserContext'; // Ensure path is correct
 
 export default function OrderHistory() {
+  const { user } = useContext(UserContext);
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // 1. Fetch Orders from Backend
+  const fetchOrders = async () => {
+    const currentUserId = user?.userId || user?.id;
+
+    if (!user || !currentUserId) {
+        console.log("No user ID found");
+        setLoading(false); // Stop loading if no user
+        return;
+    }
+
+    try {
+      // 3. USE THE NEW VARIABLE IN THE URL
+      const response = await axios.get(`http://localhost:8081/api/orders/user/${currentUserId}`);
+      
+      const sortedOrders = response.data.sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate));
+      setOrders(sortedOrders);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching history:", error);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchOrders();
+  }, [user]);
+
+  if (loading) return <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}><CircularProgress /></Box>;
+
   return (
     <Box 
       sx={{ 
@@ -48,12 +51,21 @@ export default function OrderHistory() {
         Order History
       </Typography>
       
-      <Stack spacing={3}>
-        {/* We will map over the real order data here later */}
-        {orders.map((order) => (
-          <OrderHistoryItem key={order.id} order={order} />
-        ))}
-      </Stack>
+      {orders.length === 0 ? (
+        <Typography variant="body1" color="text.secondary">No orders found.</Typography>
+      ) : (
+        <Stack spacing={3}>
+          {orders.map((order) => (
+            <OrderHistoryItem 
+              key={order.orderId} 
+              order={order} 
+              onRefresh={fetchOrders} // Pass this so we can reload after cancelling
+            />
+          ))}
+        </Stack>
+      )}
     </Box>
   );
+
+  
 }
