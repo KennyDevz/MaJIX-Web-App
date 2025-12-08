@@ -125,58 +125,7 @@ public class OrderService {
 
     public List<OrderResponseDTO> getAllOrders() {
         List<Orders> orders = orderRepository.findAll();
-
-        return orders.stream().map(order -> {
-            List<OrderItemDTO> itemDTOs = order.getOrderItems().stream().map(item -> {
-                double subtotal = item.getPriceAtPurchase() * item.getQty();
-
-                String pName = "Unknown Product";
-                String pSize = "N/A";
-                String pColor = "N/A";
-                String pImage = " ";
-
-                if(item.getVariant() != null){
-                    pSize = item.getVariant().getSize();
-                    pColor = item.getVariant().getColor();
-
-                    if(item.getVariant().getProduct() != null){
-                        pName = item.getVariant().getProduct().getName();
-                        pImage = item.getVariant().getProduct().getImageUrl();
-                    }
-                }
-
-                return new OrderItemDTO(
-                        pName,
-                        pSize,
-                        pColor,
-                        item.getPriceAtPurchase(),
-                        item.getQty(),
-                        subtotal,
-                        pImage
-                );
-            }).collect(Collectors.toList());
-
-            // 2. Map Customer Info
-            String custName = (order.getCustomer() != null)
-                    ? order.getCustomer().getFirstname() + " " + order.getCustomer().getLastname()
-                    : "Guest";
-            String custEmail = (order.getCustomer() != null)
-                    ? order.getCustomer().getEmail()
-                    : "No Email";
-
-            return new OrderResponseDTO(
-                    order.getOrderId(),
-                    order.getStatus(),
-                    order.getTotalAmount(),
-                    order.getOrderDate(),
-                    order.getPaymentMethod(),
-                    order.getShippingAddress(),
-                    itemDTOs,
-                    (order.getCart() != null) ? order.getCart().getCartId() : null,
-                    custName,
-                    custEmail
-            );
-        }).collect(Collectors.toList());
+        return orders.stream().map(this::mapToDTO).collect(Collectors.toList());
      }
 
      public void updateOrderStatus(Long orderId, String newStatus) {
@@ -185,4 +134,83 @@ public class OrderService {
          order.setStatus(newStatus);
          orderRepository.save(order);
      }
+
+    // 1. Get orders for a specific user
+    public List<OrderResponseDTO> getOrdersByUser(Long userId) {
+        List<Orders> orders = orderRepository.findByCustomerUserId(userId);
+
+        // Reuse the same mapping logic you used in getAllOrders
+        return orders.stream().map(this::mapToDTO).collect(Collectors.toList());
+    }
+
+    // 2. User cancels their own order
+    public void cancelOrder(Long orderId) {
+        Orders order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        // --- RULE: Only allow cancellation if PENDING ---
+        // If the admin has already changed it to SHIPPED or DELIVERED, stop the user.
+        if (!"PENDING".equalsIgnoreCase(order.getStatus())) {
+            throw new RuntimeException("Cannot cancel order. It is already " + order.getStatus());
+        }
+
+        // Update status to CANCELLED
+        order.setStatus("CANCELLED");
+        orderRepository.save(order);
+    }
+
+    // --- HELPER METHOD: Converts Entity to DTO ---
+    private OrderResponseDTO mapToDTO(Orders order) {
+        // 1. Map Order Items
+        List<OrderItemDTO> itemDTOs = order.getOrderItems().stream().map(item -> {
+            double subtotal = item.getPriceAtPurchase() * item.getQty();
+
+            String pName = "Unknown Product";
+            String pSize = "N/A";
+            String pColor = "N/A";
+            String pImage = "";
+
+            if (item.getVariant() != null) {
+                pSize = item.getVariant().getSize();
+                pColor = item.getVariant().getColor();
+
+                if (item.getVariant().getProduct() != null) {
+                    pName = item.getVariant().getProduct().getName();
+                    pImage = item.getVariant().getProduct().getImageUrl();
+                }
+            }
+
+            return new OrderItemDTO(
+                    pName,
+                    pSize,
+                    pColor,
+                    item.getPriceAtPurchase(),
+                    item.getQty(),
+                    subtotal,
+                    pImage
+            );
+        }).collect(Collectors.toList());
+
+        // 2. Map Customer Info
+        String custName = (order.getCustomer() != null)
+                ? order.getCustomer().getFirstname() + " " + order.getCustomer().getLastname()
+                : "Guest";
+        String custEmail = (order.getCustomer() != null)
+                ? order.getCustomer().getEmail()
+                : "No Email";
+
+        // 3. Return the DTO
+        return new OrderResponseDTO(
+                order.getOrderId(),
+                order.getStatus(),
+                order.getTotalAmount(),
+                order.getOrderDate(),
+                order.getPaymentMethod(),
+                order.getShippingAddress(),
+                itemDTOs,
+                (order.getCart() != null) ? order.getCart().getCartId() : null,
+                custName,
+                custEmail
+        );
+    }
 }
