@@ -12,9 +12,9 @@ const StatCard = ({ label, value, className = '' }) => (
 export default function StatsCards({ stats }) {
   const { 
     productCount = 0, 
-    totalOrders = 5, 
-    pendingOrders = 2, 
-    returnRequest = 1, 
+    totalOrders = 0, 
+    pendingOrders = 0, 
+    returnRequest = 0, 
     totalRevenue = '$ 5,257' 
   } = stats;
 
