@@ -36,6 +36,9 @@ public class Orders {
     private String orderDate;
     private String paymentMethod;
 
+    private String shippedDate;
+    private String deliveredDate;
+
     // Constructors
     public Orders() {}
 
@@ -66,4 +69,10 @@ public class Orders {
 
     public String getPaymentMethod() { return paymentMethod; }
     public void setPaymentMethod(String paymentMethod) { this.paymentMethod = paymentMethod; }
+
+    public String getShippedDate() { return shippedDate; }
+    public void setShippedDate(String shippedDate) { this.shippedDate = shippedDate; }
+
+    public String getDeliveredDate() { return deliveredDate; }
+    public void setDeliveredDate(String deliveredDate) { this.deliveredDate = deliveredDate; }
 }

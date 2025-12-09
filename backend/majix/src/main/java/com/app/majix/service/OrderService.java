@@ -56,6 +56,8 @@ public class OrderService {
         order.setCustomer(customer);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         order.setOrderDate(LocalDateTime.now().format(formatter));
+        order.setShippedDate(null);
+        order.setDeliveredDate(null);
         order.setStatus("PENDING");
         order.setTotalAmount(cart.getTotalAmount());
         order.setPaymentMethod(request.getPaymentMethod());
@@ -113,6 +115,8 @@ public class OrderService {
                 savedOrder.getStatus(),
                 savedOrder.getTotalAmount(),
                 savedOrder.getOrderDate(),
+                savedOrder.getShippedDate(),
+                savedOrder.getDeliveredDate(),
                 savedOrder.getPaymentMethod(),
                 savedOrder.getShippingAddress(),
                 itemDTOs,
@@ -132,6 +136,37 @@ public class OrderService {
          Orders order = orderRepository.findById(orderId)
                  .orElseThrow(() -> new RuntimeException("Order not found"));
          order.setStatus(newStatus);
+         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+         String now = LocalDateTime.now().format(formatter);
+         String currentStatus = order.getStatus().toUpperCase();
+         String statusToSet = newStatus.toUpperCase();
+
+         // --- VALIDATION RULES ---
+         //Cannot go back from SHIPPED to PENDING
+         if ("SHIPPED".equals(currentStatus) && "PENDING".equals(statusToSet)) {
+             throw new RuntimeException("Invalid status change: Cannot change from SHIPPED back to PENDING.");
+         }
+         //Cannot go back from DELIVERED to anything (SHIPPED or PENDING)
+         if ("DELIVERED".equals(currentStatus)) {
+             if ("PENDING".equals(statusToSet) || "SHIPPED".equals(statusToSet)) {
+                 throw new RuntimeException("Invalid status change: Cannot change from DELIVERED back to " + statusToSet + ".");
+             }
+         }
+         order.setStatus(statusToSet);
+
+         // --- CAPTURE DATES ---
+         if ("SHIPPED".equalsIgnoreCase(newStatus)) {
+             if (order.getShippedDate() == null) {
+                 order.setShippedDate(now);
+             }
+         } else if ("DELIVERED".equalsIgnoreCase(newStatus)) {
+             if (order.getShippedDate() == null) {
+                 order.setShippedDate(now);
+             }
+             if (order.getDeliveredDate() == null) {
+                 order.setDeliveredDate(now);
+             }
+         }
          orderRepository.save(order);
      }
 
@@ -176,7 +211,7 @@ public class OrderService {
 
                 if (item.getVariant().getProduct() != null) {
                     pName = item.getVariant().getProduct().getName();
-                    pImage = item.getVariant().getProduct().getImageUrl();
+                    pImage = item.getVariant().getImageUrl();
                 }
             }
 
@@ -205,6 +240,8 @@ public class OrderService {
                 order.getStatus(),
                 order.getTotalAmount(),
                 order.getOrderDate(),
+                order.getShippedDate(),
+                order.getDeliveredDate(),
                 order.getPaymentMethod(),
                 order.getShippingAddress(),
                 itemDTOs,
