@@ -10,9 +10,9 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long productId; 
 
-    private String name; 
-    
-    @Lob 
+    private String name;
+
+    @Column(columnDefinition = "TEXT")
     private String description;
     
     private String category; 
