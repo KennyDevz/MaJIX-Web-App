@@ -21,6 +21,7 @@ import AdminOrderPage from './pages/admin/AdminOrderPage';
 import AdminReturnsPage from './pages/admin/AdminReturnsPage';
 import AdminCustomersPage from './pages/admin/AdminCustomersPage';
 import AdminLayout from './pages/admin/AdminLayout';
+import ContactUs from './pages/ContactUs';
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
             <Route path="/Checkout" element={<Checkout/>}/>
             <Route path="/Profile" element={<ProfilePage/>}/>
             <Route path='/AboutUs' element={<AboutUs/>}/>
+            <Route path='/ContactUs' element={<ContactUs/>}/>
             {/* ... etc. */}
 
             {/* --- Admin Routes --- */}
