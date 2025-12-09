@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Box, Typography, Paper, Chip, Button, Collapse, Divider } from '@mui/material';
+import { Box, Typography, Paper, Chip, Button, Collapse, Divider, Stepper, Step, StepLabel } from '@mui/material';
+import { getColorName } from '../../utils/colorUtils';
 
 // Helper for status colors
 const getStatusChip = (status) => {
@@ -30,13 +31,24 @@ const getStatusChip = (status) => {
 };
 
 export default function OrderHistoryItem({ order, onRefresh }) {
-  const { orderId, status, orderDate, items, totalAmount } = order;
+  const { orderId, status, orderDate,shippedDate, deliveredDate, items, totalAmount } = order;
   const [expanded, setExpanded] = useState(false);
   const itemCount = items ? items.length : 0;
 
   // Calculate Subtotal (Sum of all item prices)
   // We calculate this manually so we can show the breakdown
   const subtotal = items ? items.reduce((sum, item) => sum + (item.price * item.quantity), 0) : 0;
+
+  const steps = [
+    { label: 'Order Placed', date: orderDate },
+    { label: 'Shipped', date: shippedDate },
+    { label: 'Delivered', date: deliveredDate },
+  ];
+
+  let activeStep = 0;
+  if (status === 'SHIPPED') activeStep = 1; 
+  if (status === 'DELIVERED') activeStep = 3; 
+  if (status === 'CANCELLED') activeStep = 0; 
 
   const handleCancel = async () => {
    if(!window.confirm("Are you sure you want to cancel this order?")) return;
@@ -111,8 +123,31 @@ export default function OrderHistoryItem({ order, onRefresh }) {
       {/* --- EXPANDED DETAILS (Updated) --- */}
       <Collapse in={expanded}>
         <Divider sx={{ my: 1 }} />
+
+        {/* 1. TIMELINE SECTION (Only show if not cancelled) */}
+        {status !== 'CANCELLED' && (
+            <Box sx={{ width: '100%', mb: 4, mt: 1 }}>
+                <Stepper activeStep={activeStep} alternativeLabel>
+                    {steps.map((step, index) => (
+                    <Step key={step.label}>
+                        <StepLabel>
+                            <Typography sx={{ fontFamily: 'Poppins', fontWeight: 600, fontSize: '14px' }}>
+                                {step.label}
+                            </Typography>
+                            {/* Display the date if it exists */}
+                            {step.date && (
+                                <Typography variant="caption" sx={{ fontFamily: 'Poppins', color: '#666', display: 'block' }}>
+                                    {step.date}
+                                </Typography>
+                            )}
+                        </StepLabel>
+                    </Step>
+                    ))}
+                </Stepper>
+            </Box>
+        )}
         
-        {/* 1. List of Items */}
+        {/* 2. List of Items */}
         <Box sx={{ mt: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
             {items && items.map((item, index) => (
                 <Box key={index} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 2 }}>
@@ -129,7 +164,7 @@ export default function OrderHistoryItem({ order, onRefresh }) {
                         <Box>
                             <Typography variant="body2" fontWeight="600">{item.productName}</Typography>
                             <Typography variant="caption" color="text.secondary">
-                                 Size: {item.size} | Color: {item.color} | Qty: {item.quantity}
+                                 Size: {item.size} | Color: {getColorName(item.color)} | Qty: {item.quantity}
                             </Typography>
                         </Box>
                     </Box>
@@ -142,7 +177,7 @@ export default function OrderHistoryItem({ order, onRefresh }) {
             ))}
         </Box>
 
-        {/* 2. Order Summary (Placeholder Section) */}
+        {/* 3. Order Summary (Placeholder Section) */}
         <Box sx={{ mt: 3, pt: 2, borderTop: '1px dashed #e0e0e0', ml: 'auto', width: { xs: '100%', sm: '50%' } }}>
             
             {/* Subtotal */}
