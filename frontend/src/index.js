@@ -1,16 +1,17 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './styles/index.css';
-import './styles/AboutUs.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import { UserProvider } from './context/UserContext'; //User Context
+import "./apiConfig"; // <--- Add this line to import apiConfig.js
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./styles/index.css";
+import "./styles/AboutUs.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import { UserProvider } from "./context/UserContext"; //User Context
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <UserProvider>
-    <App />
+      <App />
     </UserProvider>
   </React.StrictMode>
 );
