@@ -8,7 +8,7 @@ export default function ProductCard({ product, onDelete, onEdit, onView }) {
   const LOW_STOCK_THRESHOLD = 10;
 
   const lowStockVariants = product.variants 
-    ? product.variants.filter(v => v.quantityInStock <= LOW_STOCK_THRESHOLD) 
+    ? product.variants.filter(v => v.quantityInStock < LOW_STOCK_THRESHOLD) 
     : [];
 
   const hasLowStock = lowStockVariants.length > 0;

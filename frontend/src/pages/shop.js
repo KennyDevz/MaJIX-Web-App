@@ -23,13 +23,15 @@ export default function Shop(){
         <div style={{display: 'flex', flexDirection: 'row', }}>
                 <Filter onApplyFilters={handleApplyFilters}/>
            
-            <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', overflowY: 'auto',}}>
+            <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', overflowY: 'auto', width: '100%'}}>
                 <h1 style={{marginRight: 'auto'}}>PRODUCTS</h1>
                 <ProductDisplay 
                 appliedCategory={appliedCategory} 
                 appliedPriceRange={appliedPriceRange}
                 appliedColors={appliedColors}
                 appliedSizes={appliedSizes}
+                enablePagination={true}  // <--- This turns on the buttons
+                itemsPerPage={8}
                 />
             </div>
             
