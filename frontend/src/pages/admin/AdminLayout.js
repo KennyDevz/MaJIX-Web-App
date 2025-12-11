@@ -1,49 +1,59 @@
 import React, { useState, useEffect, useCallback } from 'react'; 
-import { Outlet, NavLink } from 'react-router-dom';
+import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { API_BASE_URL } from '../../apiConfig';
 import '../../styles/admin/AdminLayout.css'; 
 import StatsCards from '../../components/admin/StatsCards';
 import ProductFormModal from '../../components/admin/ProductFormModal'; 
 import ProductViewModal from '../../components/admin/ProductViewModal';
-import { useNavigate} from 'react-router-dom';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { UserContext } from "../../context/UserContext"
 
 // Define the product-specific URL
 const PRODUCTS_API_URL = `${API_BASE_URL}/products`;
+const ORDERS_API_URL = `${API_BASE_URL}/orders/all`; 
+const RETURNS_API_URL = `${API_BASE_URL}/returns`;
 
 export default function AdminLayout() {
   const [products, setProducts] = useState([]);
+  const [orders, setOrders] = useState([]);
+  const [returns, setReturns] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   const { logout } = React.useContext(UserContext);
 
-  // 3. Add modal state here
+  // Modal states
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [productToEdit, setProductToEdit] = useState(null);
-
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [productToView, setProductToView] = useState(null);
 
-  // UPDATED: Now handles the async logout gracefully
-    const handleLogout = async () => {
-        if (window.confirm("Are you sure you want to logout?")) {
-            await logout(); // Wait for backend to clear session
-            navigate("/", { replace: true }); // Redirect to home
-        }
-    };
+  const handleLogout = async () => {
+      if (window.confirm("Are you sure you want to logout?")) {
+          await logout(); 
+          navigate("/", { replace: true });
+      }
+  };
 
-
-  // 4. Use useCallback for fetchProducts
-  const fetchProducts = useCallback(async () => {
+  // --- 2. FETCH ALL DATA ---
+  const fetchAllData = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await axios.get(PRODUCTS_API_URL);
-      setProducts(response.data);
+      // Execute all requests in parallel
+      const [productsRes, ordersRes, returnsRes] = await Promise.all([
+        axios.get(PRODUCTS_API_URL),
+        axios.get(ORDERS_API_URL), 
+        axios.get(RETURNS_API_URL),
+      ]);
+
+      setProducts(productsRes.data);
+      setOrders(ordersRes.data);
+      setReturns(returnsRes.data);
+
     } catch (e) {
+      console.error("Error fetching admin data:", e);
       setError(e.response?.data?.message || e.message);
     } finally {
       setLoading(false);
@@ -51,78 +61,57 @@ export default function AdminLayout() {
   }, []); 
 
   useEffect(() => {
-    fetchProducts();
-  }, [fetchProducts]);
+    fetchAllData();
+  }, [fetchAllData]);
   
+  // Calculate Revenue (Sum of non-cancelled orders)
+  const revenue = orders
+    .filter(order => order.status !== 'CANCELLED')
+    .reduce((sum, order) => sum + (order.totalAmount || 0), 0);
 
-  // 5. All handlers live in this file now
-  const handleOpenViewModal = (product) => {
-    setProductToView(product);
-    setIsViewModalOpen(true);
-  };
+  // Handlers
+  const handleOpenViewModal = (product) => { setProductToView(product); setIsViewModalOpen(true); };
+  const handleCloseViewModal = () => { setIsViewModalOpen(false); setProductToView(null); };
+  const handleOpenAddModal = () => { setProductToEdit(null); setIsModalOpen(true); };
+  const handleOpenEditModal = (product) => { setProductToEdit(product); setIsModalOpen(true); };
+  const handleCloseModal = () => { setIsModalOpen(false); setProductToEdit(null); };
 
-  const handleCloseViewModal = () => {
-    setIsViewModalOpen(false);
-    setProductToView(null);
-  };
-
-  const handleOpenAddModal = () => {
-    setProductToEdit(null);
-    setIsModalOpen(true);
-  };
-
-  const handleOpenEditModal = (product) => {
-    setProductToEdit(product);
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setProductToEdit(null);
-  };
-
-  // This is called by the modal
   const handleSuccess = () => {
-    fetchProducts(); 
+    fetchAllData(); 
     handleCloseModal();
   };
 
   const handleDelete = async (productId) => {
-    if (!window.confirm(`Are you sure you want to delete product ID ${productId}?`)) {
-      return;
-    }
+    if (!window.confirm(`Are you sure you want to delete product ID ${productId}?`)) return;
     try {
       await axios.delete(`${PRODUCTS_API_URL}/${productId}`);
       alert('Product deleted successfully!');
-      fetchProducts(); // Re-fetches products (updates list AND stat card)
+      fetchAllData(); 
     } catch (e) {
-      setError(e.response?.data?.message || e.message);
       alert(`Error deleting product: ${e.message}`);
     }
   };
 
   const stats = {
     productCount: loading ? '...' : products.length,
-    totalOrders: 5,     
-    pendingOrders: 2,
-    returnRequest: 1,
-    totalRevenue: '$ 5,257'
+    totalOrders: loading ? '...' : orders.length,     
+    pendingOrders: loading ? '...' : orders.filter(o => o.status === 'PENDING').length,
+    returnRequest: loading ? '...' : returns.filter(r => r.status === 'PENDING').length,
+    totalRevenue: loading ? '...' : `₱ ${revenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
   };
 
   return (
     <div className="admin-container">
       <div className="admin-header" style={{display: 'flex', justifyContent: 'space-between', alignContent: 'center', borderBottom: '1px solid #ccc'}}>
         <h1>MaJIX Admin</h1>
-        {/* Profile Button */}
-              <div style={{backgroundColor: '#000', display: 'flex', justifyContent: 'flex-start', alignItems: 'center', gap: '10px', border: '1px solid #000', cursor: 'pointer', padding: '0 10px',height:'fit-content', borderRadius: '5px'}} onClick={handleLogout}>
-                  <LogoutIcon style={{width: '25px', height: '25px', color: '#ffffffff'}}/>
-                  <p style={{color: '#FFF', fontWeight: "bold"}}>Logout</p>
-              </div>
+        <div style={{backgroundColor: '#000', display: 'flex', justifyContent: 'flex-start', alignItems: 'center', gap: '10px', border: '1px solid #000', cursor: 'pointer', padding: '0 10px',height:'fit-content', borderRadius: '5px'}} onClick={handleLogout}>
+            <LogoutIcon style={{width: '25px', height: '25px', color: '#ffffffff'}}/>
+            <p style={{color: '#FFF', fontWeight: "bold"}}>Logout</p>
+        </div>
       </div>
       
       <StatsCards stats={stats} />
 
-      {/* Navigation Tabs */}
       <div className="admin-tabs">
         <NavLink to="/admin/products" className="tab-item">Products</NavLink>
         <NavLink to="/admin/orders" className="tab-item">Orders</NavLink>
@@ -130,9 +119,7 @@ export default function AdminLayout() {
         <NavLink to="/admin/customers" className="tab-item">Customers</NavLink>
       </div>
 
-      {/* Main Content Area */}
       <div className="content-area">
-        {/* --- 4. Pass all data and functions down via context --- */}
         <Outlet context={{ products, loading, error, handleOpenAddModal, handleOpenEditModal, handleOpenViewModal, handleDelete }} />
       </div>
 

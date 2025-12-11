@@ -85,12 +85,6 @@ export default function ProfileInfoForm() {
             defaultValue={user?.phonenumber || ""}
           />
         </Grid>
-        <Grid item xs={12}>
-          <StyledTextField
-            label="Address"
-            defaultValue="123 Main Street, New York, NY 10001"
-          />
-        </Grid>
       </Grid>
 
       {/* Save / Logout Buttons */}

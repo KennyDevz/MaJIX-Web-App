@@ -5,42 +5,6 @@ import { API_BASE_URL } from '../../apiConfig';
 import '../../styles/admin/AdminLayout.css';
 import '../../styles/admin/AdminCustomersPage.css';
 
-// Mock data for development (remove when API is ready)
-const mockCustomers = [
-  {
-    userId: 1,
-    email: 'john.doe@example.com',
-    firstname: 'John',
-    lastname: 'Doe',
-    phonenumber: '123-456-7890',
-    role: 'CUSTOMER',
-    totalOrders: 5,
-    totalSpent: 450.75,
-    joinDate: '2024-01-01',
-  },
-  {
-    userId: 2,
-    email: 'jane.smith@example.com',
-    firstname: 'Jane',
-    lastname: 'Smith',
-    phonenumber: '234-567-8901',
-    role: 'CUSTOMER',
-    totalOrders: 3,
-    totalSpent: 280.50,
-    joinDate: '2024-01-05',
-  },
-  {
-    userId: 3,
-    email: 'bob.johnson@example.com',
-    firstname: 'Bob',
-    lastname: 'Johnson',
-    phonenumber: '345-678-9012',
-    role: 'CUSTOMER',
-    totalOrders: 8,
-    totalSpent: 720.25,
-    joinDate: '2023-12-15',
-  },
-];
 
 export default function AdminCustomersPage() {
   const [customers, setCustomers] = useState([]);

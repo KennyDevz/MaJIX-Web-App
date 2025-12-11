@@ -108,7 +108,9 @@ public class ProductService {
         productRepository.deleteById(productId);
     }
 
-
+    public List<Product> searchProducts(String keyword) {
+        return productRepository.findByNameContainingIgnoreCase(keyword);
+    }
 
     
 }

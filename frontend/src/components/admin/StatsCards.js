@@ -15,7 +15,7 @@ export default function StatsCards({ stats }) {
     totalOrders = 0, 
     pendingOrders = 0, 
     returnRequest = 0, 
-    totalRevenue = '$ 5,257' 
+    totalRevenue = 0,
   } = stats;
 
   return (
