@@ -6,8 +6,9 @@ import { UserContext } from "../context/UserContext"
 import { useContext, useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import SignInForm from "../components/user/sign_in_form"
-import Profile from "../assets/50-profile-icon.png"
-import Logout from "../assets/50-logout-icon.png"
+import PersonIcon from '@mui/icons-material/Person';
+import LogoutIcon from '@mui/icons-material/Logout';
+import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';   
 
 // version 2.1 with dropdown and dropdown close on outside click
 function NavBar(){
@@ -67,7 +68,7 @@ function NavBar(){
             
             <div className="user">
             <Link to="/Cart" className="cart"  onClick={()=>{setShowDropDown(false)}}>
-                <img src={CartIcon} alt="cart-icon"/>
+                <ShoppingCartOutlinedIcon style={{width: '30px', height: '30px', color: '#000'}}/>
             </Link>
 
             { user ? (
@@ -98,12 +99,12 @@ function NavBar(){
                     width: '180px',
                     border: '1px solid #ccc',}}>
                     <div style={{display: 'flex', justifyContent: 'flex-start', alignItems: 'center', gap: '10px'}}>
-                        <img src={Profile} alt="profile-icon" style={{width: '25px', height: '25px'}}/>
+                        <PersonIcon style={{width: '25px', height: '25px', color: '#000'}}/>
                         <Link to="/Profile" className="route-link" onClick={()=>{setShowDropDown(!showDropDown)}}>Profile</Link>
                     </div>
                     <hr style={{backgroundColor: '#000000ff', width: '100%'}}/>
                     <div style={{display: 'flex', justifyContent: 'flex-start', alignItems: 'center', gap: '10px'}}>
-                        <img src={Logout} alt="logout-icon" style={{width: '25px', height: '25px'}}/>
+                        <LogoutIcon style={{width: '25px', height: '25px', color: '#000'}}/>
                         <p className="route-link" onClick={handleLogout}>Logout</p>
                     </div>
                 </div>
