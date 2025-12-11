@@ -4,88 +4,60 @@ import { API_BASE_URL } from '../../apiConfig';
 import '../../styles/admin/AdminLayout.css';
 import '../../styles/admin/AdminReturnsPage.css';
 
-// Mock data for development (remove when API is ready)
-const mockReturns = [
-  {
-    returnId: 1,
-    reason: 'Defective item',
-    status: 'Pending',
-    requestDate: '2024-01-15',
-    orderId: '12345',
-    customerName: 'John Doe',
-    productName: 'Classic Black Hoodie',
-  },
-  {
-    returnId: 2,
-    reason: 'Wrong size',
-    status: 'Approved',
-    requestDate: '2024-01-10',
-    orderId: '12346',
-    customerName: 'Jane Smith',
-    productName: 'MaJiX Polo Shirt',
-  },
-  {
-    returnId: 3,
-    reason: 'Changed mind',
-    status: 'Rejected',
-    requestDate: '2024-01-08',
-    orderId: '12347',
-    customerName: 'Bob Johnson',
-    productName: 'Vintage Logo Tee',
-  },
-];
-
 export default function AdminReturnsPage() {
   const [returns, setReturns] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [filterStatus, setFilterStatus] = useState('all');
 
-  // TODO: Replace with actual API call when backend endpoint is ready
-  useEffect(() => {
+  // --- 1. Fetch Returns from Backend ---
+  const fetchReturns = async () => {
     setLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      setReturns(mockReturns);
-      setLoading(false);
-    }, 500);
-
-    // When API is ready, use this:
-    // const fetchReturns = async () => {
-    //   try {
-    //     const response = await axios.get(`${API_BASE_URL}/returns`);
-    //     setReturns(response.data);
-    //   } catch (e) {
-    //     setError(e.response?.data?.message || e.message);
-    //   } finally {
-    //     setLoading(false);
-    //   }
-    // };
-    // fetchReturns();
-  }, []);
-
-  const filteredReturns = filterStatus === 'all' 
-    ? returns 
-    : returns.filter(r => r.status.toLowerCase() === filterStatus.toLowerCase());
-
-  const handleStatusUpdate = async (returnId, newStatus) => {
     try {
-      // TODO: Replace with actual API call when backend endpoint is ready
-      setReturns(returns.map(r => 
-        r.returnId === returnId ? { ...r, status: newStatus } : r
-      ));
-      alert(`Return ${returnId} status updated to ${newStatus}`);
-      
-      // When API is ready, use this:
-      // await axios.put(`${API_BASE_URL}/returns/${returnId}`, { status: newStatus });
-      // fetchReturns(); // Re-fetch returns
+      // Calls GET http://localhost:8081/api/returns
+      const response = await axios.get(`${API_BASE_URL}/returns`);
+      setReturns(response.data);
+      setError(null);
     } catch (e) {
-      alert(`Error updating return: ${e.message}`);
+      console.error("Error fetching returns:", e);
+      setError(e.response?.data?.message || "Failed to connect to server.");
+    } finally {
+      setLoading(false);
     }
   };
 
+  useEffect(() => {
+    fetchReturns();
+  }, []);
+
+  // --- 2. Update Return Status ---
+  const handleStatusUpdate = async (returnId, newStatus) => {
+    if (!window.confirm(`Are you sure you want to mark this return as ${newStatus}?`)) {
+      return;
+    }
+
+    try {
+      // Calls PUT http://localhost:8081/api/returns/{id}/status
+      await axios.put(`${API_BASE_URL}/returns/${returnId}/status`, { 
+        status: newStatus 
+      });
+      
+      alert(`Return request marked as ${newStatus}.`);
+      fetchReturns(); // Refresh the list to show updated status
+    } catch (e) {
+      console.error("Error updating status:", e);
+      alert(`Error updating return: ${e.response?.data || e.message}`);
+    }
+  };
+
+  // Filter Logic
+  const filteredReturns = filterStatus === 'all' 
+    ? returns 
+    : returns.filter(r => (r.status || '').toLowerCase() === filterStatus.toLowerCase());
+
+  // Helper for styling status badges
   const getStatusClass = (status) => {
-    const statusLower = status.toLowerCase();
+    const statusLower = (status || '').toLowerCase();
     if (statusLower === 'approved') return 'status-approved';
     if (statusLower === 'rejected') return 'status-rejected';
     return 'status-pending';
@@ -137,6 +109,10 @@ export default function AdminReturnsPage() {
               <div className="return-detail-section">
                 <h4>Product</h4>
                 <p>{returnItem.productName}</p>
+                {/* Optional: Display Quantity if available in DTO */}
+                {returnItem.quantity && (
+                    <p style={{ fontSize: '0.8rem', color: '#666' }}>Qty: {returnItem.quantity}</p>
+                )}
               </div>
               <div className="return-detail-section">
                 <h4>Request Date</h4>
@@ -151,17 +127,18 @@ export default function AdminReturnsPage() {
               </div>
               
               <div className="return-actions">
-                {returnItem.status === 'Pending' && (
+                {/* Only show buttons if status is PENDING (case-insensitive check) */}
+                {(returnItem.status || '').toLowerCase() === 'pending' && (
                   <>
                     <button
                       className="action-btn approve-btn"
-                      onClick={() => handleStatusUpdate(returnItem.returnId, 'Approved')}
+                      onClick={() => handleStatusUpdate(returnItem.returnId, 'APPROVED')}
                     >
                       Approve
                     </button>
                     <button
                       className="action-btn reject-btn"
-                      onClick={() => handleStatusUpdate(returnItem.returnId, 'Rejected')}
+                      onClick={() => handleStatusUpdate(returnItem.returnId, 'REJECTED')}
                     >
                       Reject
                     </button>
@@ -175,4 +152,3 @@ export default function AdminReturnsPage() {
     </>
   );
 }
-

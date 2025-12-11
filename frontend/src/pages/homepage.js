@@ -48,7 +48,7 @@ export default function HomePage(){
                         PRODUCTS
                     </h1>
                     <div style={{display: 'flex', justifyContent: 'center', width: '100%', }}>
-                    <ProductDisplay />
+                    <ProductDisplay enablePagination={false} itemsPerPage={10}/>
                     </div>
                 </div>
             </div>
