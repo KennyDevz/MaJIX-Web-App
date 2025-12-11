@@ -14,6 +14,7 @@ import com.app.majix.repository.ProductVariantRepository;
 import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -97,12 +98,44 @@ public class CartService {
                 .collect(Collectors.toList());
     }
 
-    public CartDTO getCartByCustomerId(Long customerId){
-        // --- 4. CHANGE: Get the ACTIVE cart ---
-        Cart customerCart = getActiveCart(customerId);
+    public CartDTO getCartByCustomerId(Long customerId) {
+        // 1. Get the ACTIVE cart
+        Cart cart = getActiveCart(customerId);
 
-        customerCart.calculateTotalAmount();
-        return userMapper.toCartDTO(customerCart);
+        // --- NEW LOGIC: Validate Stock vs Cart Quantity ---
+        boolean cartChanged = false;
+        List<CartItem> itemsToRemove = new ArrayList<>();
+
+        for (CartItem item : cart.getCartItems()) {
+            ProductVariant variant = item.getProductVariant();
+            int currentStock = variant.getQuantityInStock();
+
+            // Scenario A: Item is completely out of stock
+            if (currentStock == 0) {
+                itemsToRemove.add(item); // Mark for removal
+                cartChanged = true;
+            }
+            // Scenario B: User wants 5, but only 2 are left
+            else if (item.getQty() > currentStock) {
+                item.setQty(currentStock); // Reduce cart qty to match available stock
+                cartChanged = true;
+            }
+        }
+
+        // Apply removals (Doing this outside the loop avoids ConcurrentModificationException)
+        if (!itemsToRemove.isEmpty()) {
+            cart.getCartItems().removeAll(itemsToRemove);
+            cartItemRepository.deleteAll(itemsToRemove);
+        }
+
+        // Save changes if any adjustments were made
+        if (cartChanged) {
+            cart.calculateTotalAmount();
+            cartRepository.save(cart);
+        }
+        // ---------------------------------------------------
+
+        return userMapper.toCartDTO(cart);
     }
 
     public void removeCartItem(Long cartItemId) {
