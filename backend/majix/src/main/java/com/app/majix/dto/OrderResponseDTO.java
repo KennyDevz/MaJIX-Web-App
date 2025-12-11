@@ -7,6 +7,9 @@ public class OrderResponseDTO {
     private String status;
     private double totalAmount;
     private String orderDate;
+    private String shippedDate;
+    private String deliveredDate;
+
     private String paymentMethod;
     private String shippingAddress;
 
@@ -17,11 +20,13 @@ public class OrderResponseDTO {
     // Optional: You can include the linked Cart ID if you want to show it
     private Long linkedCartId;
 
-    public OrderResponseDTO(Long orderId, String status, double totalAmount, String orderDate, String paymentMethod, String shippingAddress, List<OrderItemDTO> items, Long linkedCartId, String customerName, String customerEmail) {
+    public OrderResponseDTO(Long orderId, String status, double totalAmount, String orderDate,String shippedDate, String deliveredDate, String paymentMethod, String shippingAddress, List<OrderItemDTO> items, Long linkedCartId, String customerName, String customerEmail) {
         this.orderId = orderId;
         this.status = status;
         this.totalAmount = totalAmount;
         this.orderDate = orderDate;
+        this.shippedDate = shippedDate;
+        this.deliveredDate = deliveredDate;
         this.paymentMethod = paymentMethod;
         this.shippingAddress = shippingAddress;
         this.items = items;
@@ -53,4 +58,8 @@ public class OrderResponseDTO {
     public void setItems(List<OrderItemDTO> items) { this.items = items; }
     public Long getLinkedCartId() { return linkedCartId; }
     public void setLinkedCartId(Long linkedCartId) { this.linkedCartId = linkedCartId; }
+    public String getShippedDate() { return shippedDate; }
+    public void setShippedDate(String shippedDate) { this.shippedDate = shippedDate; }
+    public String getDeliveredDate() { return deliveredDate; }
+    public void setDeliveredDate(String deliveredDate) { this.deliveredDate = deliveredDate; }
 }

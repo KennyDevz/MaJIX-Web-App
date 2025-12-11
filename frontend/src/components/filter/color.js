@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'; 
+import { getColorName } from '../../utils/colorUtils';
 
 const API_URL = 'http://localhost:8081/api/products/colors'
 
@@ -45,7 +46,7 @@ export default function FilterColors({ selectedColors, onColorChange }) {
                     <button
                         key={color}
                         type="button" 
-                        title={color}
+                        title={getColorName(color)}
                         onClick={() => handleColorChange(color)}
                         style={{
                             width: '32px',

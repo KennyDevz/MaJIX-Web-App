@@ -23,7 +23,7 @@ public class Review {
 
     private int rating;
 
-    @Lob // For long text
+    @Column(columnDefinition = "TEXT")
     private String comment;
 
     private LocalDateTime datePosted;

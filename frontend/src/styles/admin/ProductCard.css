@@ -8,6 +8,35 @@
   border: 1px solid #949494; /* From Figma */
   border-radius: 15px; /* From Figma */
   background: white;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+/* Optional: Add a subtle red border to the whole card */
+.card-warning-border {
+  border: 1px solid #ffcdd2; /* Light red border */
+}
+
+/* Wrapper for the icon to give it a background */
+.warning-icon-wrapper {
+  position: absolute;
+  top: 8px;
+  right: 8px; /* Positioned top-right */
+  background-color: #ffebee; /* Very light red background */
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Text color for the stock count */
+.stock-low-text {
+  color: #d32f2f; /* Red text */
+  font-weight: 600;
 }
 
 .product-image {

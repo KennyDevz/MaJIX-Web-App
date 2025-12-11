@@ -93,10 +93,15 @@ export default function CheckoutPage() {
       navigate('/'); 
 
     } catch (error) {
-      console.error("Checkout failed:", error);
-      alert("Failed to place order. " + (error.response?.data?.message || "Unknown error"));
-    }
+      console.error("Checkout error:", error);
+
+      const data = error.response?.data;
+      const msg = data?.message || JSON.stringify(data);
+
+      alert(`Order Failed: ${msg}`);
+      }
   };
+
 
   return (
     <Box sx={{ mt: 2, mb: 5, px: { xs: 2, md: '80px' } }}>

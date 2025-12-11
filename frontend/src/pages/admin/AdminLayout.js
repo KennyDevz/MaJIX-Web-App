@@ -5,6 +5,7 @@ import { API_BASE_URL } from '../../apiConfig';
 import '../../styles/admin/AdminLayout.css'; 
 import StatsCards from '../../components/admin/StatsCards';
 import ProductFormModal from '../../components/admin/ProductFormModal'; 
+import ProductViewModal from '../../components/admin/ProductViewModal';
 
 // Define the product-specific URL
 const PRODUCTS_API_URL = `${API_BASE_URL}/products`;
@@ -17,6 +18,9 @@ export default function AdminLayout() {
   // 3. Add modal state here
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [productToEdit, setProductToEdit] = useState(null);
+
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [productToView, setProductToView] = useState(null);
 
   // 4. Use useCallback for fetchProducts
   const fetchProducts = useCallback(async () => {
@@ -34,8 +38,19 @@ export default function AdminLayout() {
   useEffect(() => {
     fetchProducts();
   }, [fetchProducts]);
+  
 
   // 5. All handlers live in this file now
+  const handleOpenViewModal = (product) => {
+    setProductToView(product);
+    setIsViewModalOpen(true);
+  };
+
+  const handleCloseViewModal = () => {
+    setIsViewModalOpen(false);
+    setProductToView(null);
+  };
+
   const handleOpenAddModal = () => {
     setProductToEdit(null);
     setIsModalOpen(true);
@@ -98,7 +113,7 @@ export default function AdminLayout() {
       {/* Main Content Area */}
       <div className="content-area">
         {/* --- 4. Pass all data and functions down via context --- */}
-        <Outlet context={{ products, loading, error, handleOpenAddModal, handleOpenEditModal, handleDelete }} />
+        <Outlet context={{ products, loading, error, handleOpenAddModal, handleOpenEditModal, handleOpenViewModal, handleDelete }} />
       </div>
 
       {isModalOpen && (
@@ -106,6 +121,13 @@ export default function AdminLayout() {
           productToEdit={productToEdit}
           onClose={handleCloseModal}
           onSuccess={handleSuccess}
+        />
+      )}
+
+      {isViewModalOpen && (
+        <ProductViewModal 
+          product={productToView} 
+          onClose={handleCloseViewModal} 
         />
       )}
     </div>

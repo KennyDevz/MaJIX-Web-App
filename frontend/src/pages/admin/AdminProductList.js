@@ -11,6 +11,7 @@ export default function AdminProductList() {
     error, 
     handleOpenAddModal, 
     handleOpenEditModal, 
+    handleOpenViewModal,
     handleDelete 
   } = useOutletContext();
 
@@ -35,6 +36,7 @@ export default function AdminProductList() {
             product={product} 
             onDelete={handleDelete}
             onEdit={handleOpenEditModal} 
+            onView={handleOpenViewModal}
           />
         ))}
       </div>

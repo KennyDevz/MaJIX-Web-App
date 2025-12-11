@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import '../../styles/admin/AdminLayout.css';
 import '../../styles/admin/AdminOrderPage.css';
+import { getColorName } from '../../utils/colorUtils';
 
 export default function AdminOrderPage() {
   const [orders, setOrders] = useState([]);
@@ -122,7 +123,7 @@ export default function AdminOrderPage() {
                       <span style={{ fontWeight: 'bold' }}>{item.productName}</span>
                       <br/>
                       <small style={{ color: '#666' }}>
-                         Size: {item.size} | Color: {item.color}
+                         Size: {item.size} | Color: {getColorName(item.color)}
                       </small>
                     </div>
 
@@ -149,11 +150,11 @@ export default function AdminOrderPage() {
                       value={order.status} 
                       onChange={(e) => handleStatusChange(order.orderId, e.target.value)}
                       style={{ padding: '5px 10px' }}
+                      disabled={order.status === "CANCELLED"}
                   >
-                      <option value="PENDING">PENDING</option>
-                      <option value="SHIPPED">SHIPPED</option>
+                      <option value="PENDING" disabled={order.status === 'SHIPPED' || order.status === 'DELIVERED'}>PENDING</option>
+                      <option value="SHIPPED" disabled={order.status === 'DELIVERED'}>SHIPPED</option>
                       <option value="DELIVERED">DELIVERED</option>
-                      <option value="CANCELLED">CANCELLED</option>
                   </select>
               </div>
 
