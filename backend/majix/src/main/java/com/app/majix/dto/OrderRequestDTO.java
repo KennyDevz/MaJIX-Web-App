@@ -4,6 +4,9 @@ public class OrderRequestDTO {
     private Long userId;
     private String paymentMethod;
 
+    // IF using a saved card, this ID is sent. IF COD, this is null.
+    private Long savedPaymentMethodId;
+
     // Address Fields
     private String street;
     private String city;
@@ -12,6 +15,9 @@ public class OrderRequestDTO {
     private String zipCode;
 
     // --- Getters and Setters ---
+    public Long getSavedPaymentMethodId() { return savedPaymentMethodId; }
+    public void setSavedPaymentMethodId(Long savedPaymentMethodId) { this.savedPaymentMethodId = savedPaymentMethodId; }
+
     public Long getUserId() { return userId; }
     public void setUserId(Long userId) { this.userId = userId; }
 

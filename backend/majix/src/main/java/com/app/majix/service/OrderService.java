@@ -5,10 +5,7 @@ import com.app.majix.dto.OrderRequestDTO;
 import com.app.majix.dto.OrderResponseDTO;
 import com.app.majix.entity.*;
 import com.app.majix.exception.OutOfStockException;
-import com.app.majix.repository.CartRepository;
-import com.app.majix.repository.CustomerRepository;
-import com.app.majix.repository.OrderRepository;
-import com.app.majix.repository.ProductVariantRepository;
+import com.app.majix.repository.*;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import com.app.majix.utils.ColorUtils;
@@ -28,18 +25,32 @@ public class OrderService {
     private final CartRepository cartRepository;
     private final CartService cartService; // Need this to close the cart properly
     private final ProductVariantRepository productVariantRepository;
+    private final SavedPaymentMethodRepository savedPaymentMethodRepository; // Injected
 
-    public OrderService(OrderRepository orderRepository, CustomerRepository customerRepository, CartRepository cartRepository, CartService cartService, ProductVariantRepository productVariantRepository, ProductVariantRepository productVariantRepository1) {
+    public OrderService(OrderRepository orderRepository, CustomerRepository customerRepository,
+                        CartRepository cartRepository, CartService cartService,
+                        ProductVariantRepository productVariantRepository, ProductVariantRepository productVariantRepository1,
+                        SavedPaymentMethodRepository savedPaymentMethodRepository) {
+
         this.orderRepository = orderRepository;
         this.customerRepository = customerRepository;
         this.cartRepository = cartRepository;
         this.cartService = cartService;
         this.productVariantRepository = productVariantRepository;
+        this.savedPaymentMethodRepository = savedPaymentMethodRepository;
     }
 
     @Transactional
     public OrderResponseDTO placeOrder(OrderRequestDTO request) {
-        // 1. Validate Customer
+        // --- 1. NEW VALIDATION CHECK ---
+        if (request.getStreet() == null || request.getStreet().isEmpty() ||
+                request.getCity() == null || request.getCity().isEmpty() ||
+                request.getCountry() == null || request.getCountry().isEmpty() ||
+                request.getZipCode() == null || request.getZipCode().isEmpty()) {
+            throw new RuntimeException("Error: Shipping address is incomplete.");
+        }
+        // -------------------------------
+
         Customer customer = customerRepository.findById(request.getUserId())
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
 
@@ -49,6 +60,33 @@ public class OrderService {
 
         if (cart.getCartItems().isEmpty()) {
             throw new RuntimeException("Cart is empty.");
+        }
+
+        double totalAmount = cart.getTotalAmount();
+        String finalPaymentMethod = request.getPaymentMethod(); // Default to what user sent (e.g. "COD")
+
+        // --- PAYMENT LOGIC START ---
+
+        // CASE 1: Saved Card (Simulated Check)
+        if (request.getSavedPaymentMethodId() != null) {
+            SavedPaymentMethod card = savedPaymentMethodRepository.findById(request.getSavedPaymentMethodId())
+                    .orElseThrow(() -> new RuntimeException("Saved payment method not found"));
+
+            // SIMULATION: Check the fake balance on the card
+            if (card.getMockBalance() < totalAmount) {
+                throw new RuntimeException("Card Declined: Insufficient funds on " + card.getType() + " ending " + card.getIdentifier());
+            }
+            // Deduct fake money to simulate a transaction
+            card.setMockBalance(card.getMockBalance() - totalAmount);
+            savedPaymentMethodRepository.save(card);
+
+            finalPaymentMethod = card.getType() + " (" + card.getIdentifier() + ")";
+        }
+
+        // CASE 2: COD (Cash on Delivery)
+        else if ("COD".equalsIgnoreCase(request.getPaymentMethod())) {
+            // No balance check needed. Just proceed.
+            finalPaymentMethod = "Cash on Delivery";
         }
 
         // 3. Create Order
