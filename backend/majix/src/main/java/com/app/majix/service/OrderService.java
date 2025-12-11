@@ -101,6 +101,7 @@ public class OrderService {
         // 9. Return Response DTO
         List<OrderItemDTO> itemDTOs = savedOrder.getOrderItems().stream()
                 .map(item -> new OrderItemDTO(
+                        item.getOrderItemId(),
                         item.getVariant().getProduct().getName(),
                         item.getVariant().getSize(),
                         item.getVariant().getColor(),
@@ -189,6 +190,17 @@ public class OrderService {
             throw new RuntimeException("Cannot cancel order. It is already " + order.getStatus());
         }
 
+        for (OrderItem item : order.getOrderItems()) {
+            ProductVariant variant = item.getVariant();
+
+            // Add the ordered quantity back to the current stock
+            int restoredStock = variant.getQuantityInStock() + item.getQty();
+            variant.setQuantityInStock(restoredStock);
+
+            // Save the updated variant
+            productVariantRepository.save(variant);
+        }
+
         // Update status to CANCELLED
         order.setStatus("CANCELLED");
         orderRepository.save(order);
@@ -216,6 +228,7 @@ public class OrderService {
             }
 
             return new OrderItemDTO(
+                    item.getOrderItemId(),
                     pName,
                     pSize,
                     pColor,

@@ -22,6 +22,8 @@ public class OrderItem {
     private int qty;
     private double priceAtPurchase;
 
+    private int returnedQty = 0;
+
     public OrderItem() {}
 
     public OrderItem(Orders order, ProductVariant variant, int qty, double priceAtPurchase) {
@@ -46,4 +48,7 @@ public class OrderItem {
 
     public double getPriceAtPurchase() { return priceAtPurchase; }
     public void setPriceAtPurchase(double priceAtPurchase) { this.priceAtPurchase = priceAtPurchase; }
+
+    public int getReturnedQty() { return returnedQty; }
+    public void setReturnedQty(int returnedQty) { this.returnedQty = returnedQty; }
 }

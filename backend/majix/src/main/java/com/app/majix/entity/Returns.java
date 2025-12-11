@@ -1,62 +1,69 @@
 package com.app.majix.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "returns")
 public class Returns {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long returnId;
+
+    // --- NEW RELATIONSHIPS ---
+    // Link to the specific item variant purchased
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_item_id", nullable = false)
+    private OrderItem orderItem;
+
+    // Link to the customer who requested it
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id", nullable = false)
+    private Customer customer;
+
+    // --- FIELDS ---
     private String reason;
     private String status;
-    private String requestDate;
+    private int quantity;
 
-    //constructor
-    public Returns(){
+    // Changed from String to LocalDateTime for easier sorting/formatting
+    private LocalDateTime requestDate;
 
+    // --- CONSTRUCTORS ---
+    public Returns() {
+        this.requestDate = LocalDateTime.now(); // Automatically set timestamp
+        this.status = "PENDING";                // Default status
     }
 
-    public Returns(String reason, String status, String requestDate){
+    public Returns(OrderItem orderItem, Customer customer, String reason, int quantity) {
+        this.orderItem = orderItem;
+        this.customer = customer;
         this.reason = reason;
-        this.status = status;
-        this.requestDate = requestDate;
+        this.quantity = quantity;
+        this.status = "PENDING";
+        this.requestDate = LocalDateTime.now();
     }
 
-    //setter and getters
-    public void setReturnId(Long returnId){
-        this.returnId = returnId;
-    }
+    // --- GETTERS AND SETTERS ---
+    public Long getReturnId() { return returnId; }
+    public void setReturnId(Long returnId) { this.returnId = returnId; }
 
-    public void setReason(String reason){
-        this.reason = reason;
-    }
+    public OrderItem getOrderItem() { return orderItem; }
+    public void setOrderItem(OrderItem orderItem) { this.orderItem = orderItem; }
 
-    public void setStatus(String status){
-        this.status = status;
-    }
+    public Customer getCustomer() { return customer; }
+    public void setCustomer(Customer customer) { this.customer = customer; }
 
-    public void setRequestDate(String requestDate){
-        this.requestDate = requestDate;
-    }
+    public String getReason() { return reason; }
+    public void setReason(String reason) { this.reason = reason; }
 
-    public Long getReturnId(){
-        return returnId;
-    }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 
-    public String getReason(){
-        return reason;
-    }
+    public int getQuantity() { return quantity; }
+    public void setQuantity(int quantity) { this.quantity = quantity; }
 
-    public String getStatus(){
-        return status;
-    }
-
-    public String getRequestDate(){
-        return requestDate;
-    }
+    public LocalDateTime getRequestDate() { return requestDate; }
+    public void setRequestDate(LocalDateTime requestDate) { this.requestDate = requestDate; }
 }

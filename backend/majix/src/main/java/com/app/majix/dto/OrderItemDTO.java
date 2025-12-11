@@ -1,6 +1,7 @@
 package com.app.majix.dto;
 
 public class OrderItemDTO {
+    private Long orderItemId;
     private String productName;
     private String size;
     private String color;
@@ -9,7 +10,8 @@ public class OrderItemDTO {
     private double subtotal;
     private String imageUrl;
 
-    public OrderItemDTO(String productName, String size, String color, double price, int quantity, double subtotal, String imageUrl) {
+    public OrderItemDTO(Long orderItemId,String productName, String size, String color, double price, int quantity, double subtotal, String imageUrl) {
+        this.orderItemId = orderItemId;
         this.productName = productName;
         this.size = size;
         this.color = color;
@@ -20,6 +22,8 @@ public class OrderItemDTO {
     }
 
     // --- Getters and Setters ---
+    public Long getOrderItemId() { return orderItemId; }
+    public void setOrderItemId(Long orderItemId) { this.orderItemId = orderItemId; }
     public String getProductName() { return productName; }
     public void setProductName(String productName) { this.productName = productName; }
     public String getSize() { return size; }
