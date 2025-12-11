@@ -1,6 +1,4 @@
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
-
-import NavBar from './components/nav_bar';
 import './styles/App.css';
 import './styles/AboutUs.css';
 import './styles/AdminCss.css';
@@ -15,48 +13,75 @@ import Cart from './pages/cart';
 import HomePage from './pages/homepage';
 import ProductView from './pages/product_view';
 import AboutUs from './pages/AboutUs';
-import Footer from './components/Footer';
 import AdminProductList from './pages/admin/AdminProductList';
 import AdminOrderPage from './pages/admin/AdminOrderPage';
 import AdminReturnsPage from './pages/admin/AdminReturnsPage';
 import AdminCustomersPage from './pages/admin/AdminCustomersPage';
 import AdminLayout from './pages/admin/AdminLayout';
+import CustomerLayout from './pages/customer/CustomerLayout';
+import UnauthorizedPage from './pages/UnauthorizedAccess';
+import ProtectedRoute from './ProtectedRoute';
+import { UserProvider } from './context/UserContext';
 
 function App() {
   return (
     <Router>
-        <NavBar />
-        <div className="main-content">
+      <UserProvider>
           <Routes>
-            {/* --- Public Routes --- */}
-            <Route path="/" element={<HomePage />} />
-            <Route path="/Shop" element={<Shop />} />
-            <Route path="/Details/:productId" element={<ProductView/>}/>
-            <Route path='/Cart' element={<Cart/>}/>
-            <Route path='/Sign-in' element={<SignIn/>}/>
-            <Route path='/Sign-up' element={<SignUp/>}/>
-            <Route path="/Details" element={<ProductView/>}/>
-            <Route path="/Checkout" element={<Checkout/>}/>
-            <Route path="/Profile" element={<ProfilePage/>}/>
-            <Route path='/AboutUs' element={<AboutUs/>}/>
-            {/* ... etc. */}
+            {/* --- CUSTOMER GROUP --- */}
+            {/* These pages will have NavBar and Footer */}
+            <Route element={<CustomerLayout />}>
 
-            {/* --- Admin Routes --- */}
-            <Route path="/admin" element={<AdminLayout />}>
-              {/* These routes render INSIDE the <Outlet> */}
+                {/* --- Public Routes --- */}
+                <Route path="/" element={<HomePage />} />
+                <Route path="/Shop" element={<Shop />} />
+                <Route path="/Details/:productId" element={<ProductView/>}/>
+                <Route path='/Cart' element={<Cart/>}/>
+                <Route path='/Sign-in' element={<SignIn/>}/>
+                <Route path='/Sign-up' element={<SignUp/>}/>
+                <Route path="/Details" element={<ProductView/>}/>
+                <Route path='/AboutUs' element={<AboutUs/>}/>
+                <Route path='/Unauthorized' element={<UnauthorizedPage/>}/>
+
+                {/* --- Protected User Routes (Any logged-in user) --- */}
+                {/* We wrap the element in ProtectedRoute without specific roles */}
+                <Route 
+                  path="/Checkout" 
+                  element={
+                    <ProtectedRoute allowedRoles={['CUSTOMER']}>
+                      <Checkout/>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route 
+                  path="/Profile" 
+                  element={
+                    <ProtectedRoute allowedRoles={['CUSTOMER']}>
+                      <ProfilePage/>
+                    </ProtectedRoute>
+                  }
+                />
+            </Route>
+
+            {/* --- Protected Admin Routes (ADMIN only) --- */}
+            <Route 
+              path="/admin" 
+              element={
+                <ProtectedRoute allowedRoles={['ADMIN']}>
+                  <AdminLayout />
+                </ProtectedRoute>
+              }
+            >
+              {/* These nested routes are automatically protected because their parent is protected */}
               <Route path="products" element={<AdminProductList />} />
               <Route path="orders" element={<AdminOrderPage />} />
               <Route path="returns" element={<AdminReturnsPage />} />
               <Route path="customers" element={<AdminCustomersPage />} />
-              
-              {/* Add a default route for /admin */}
               <Route index element={<Navigate to="products" replace />} />
             </Route>
 
           </Routes>
-        </div>
-
-    <Footer />
+          </UserProvider>
     </Router>
   );
 }

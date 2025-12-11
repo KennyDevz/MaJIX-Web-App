@@ -26,9 +26,13 @@ export default function SignInForm({ onClose }) {
       // If you need to redirect based on role, you can get 'user' from context
       // *after* a re-render, OR return the user object from the login function.
       // For now, let's just go to root or admin based on a quick check or default.
-      alert("Login Successful!"); //simple success alert
       // Simple fix: Reload or just close. The Context updates automatically.
       if (onClose) onClose();
+      alert("Login Successful!"); //simple success 
+      if(result.role === 'CUSTOMER') 
+          navigate("/", { replace: true })
+        else if(result.role === 'ADMIN') 
+          navigate("/admin", { replace: true })
       // Logic for redirecting can be added here if login() returns the user object.
     } else {
       setMessage(result.message);
