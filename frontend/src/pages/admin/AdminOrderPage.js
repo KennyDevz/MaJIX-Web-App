@@ -59,9 +59,6 @@ export default function AdminOrderPage() {
 
     return matchesStatus && matchesEmail;
 
-    {/*if (filter === 'all') return true;
-    return order.status?.toLowerCase() === filter.toLowerCase();
-  });*/}
   });
 
   if (loading) return <div className="loading">Loading Orders...</div>;

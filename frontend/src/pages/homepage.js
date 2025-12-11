@@ -1,7 +1,10 @@
 import ProductDisplay from "../components/product_display";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function HomePage(){
+    const navigate = useNavigate();
+
     useEffect(() => { //scrolls to the top of component
         window.scrollTo(0, 0);
     }, []);
@@ -28,13 +31,29 @@ export default function HomePage(){
                             Browse through our diverse range of meticulously crafted garments, designed to bring out your individuality and cater to your sense of style.
                         </p>
 
-                        <div style={{backgroundColor: '#FFF',display: 'flex', width: '120px', height: '30px', padding: '16px 54px', justifyContent: 'center', alignItems: 'center', gap: '12px', flexShrink: '0', borderRadius: '62px', opacity: '.86', marginTop: '80px'}}>
+                        <div 
+                            onClick={() => navigate('/Shop')}
+                            style={{
+                                backgroundColor: '#FFF',
+                                display: 'flex', 
+                                width: '120px', 
+                                height: '30px', 
+                                padding: '16px 54px', 
+                                justifyContent: 'center', 
+                                alignItems: 'center', 
+                                gap: '12px', 
+                                flexShrink: '0', 
+                                borderRadius: '62px', 
+                                opacity: '.86', 
+                                marginTop: '80px',
+                                cursor: 'pointer' 
+                            }}
+                        >
                             <p style={{
                                 color: "#000",
                                 fontSize: '20px',
                                 fontWeight:'500'
-                            }}
-                            >SHOP NOW</p>
+                            }}>SHOP NOW</p>
                         </div>
                     </div>
                 </div>

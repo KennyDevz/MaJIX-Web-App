@@ -1,6 +1,22 @@
+import { useState } from 'react'; 
+import { useNavigate } from 'react-router-dom'; 
 import SearchIcon from '../assets/search-icon.png'
 
 function SearchBar(){
+    const [searchTerm, setSearchTerm] = useState('');
+    const navigate = useNavigate();
+
+    const handleSearch = (e) => {
+        e.preventDefault(); 
+        if (searchTerm.trim()) {
+
+            navigate(`/Shop?search=${encodeURIComponent(searchTerm.trim())}`);
+        } else {
+          
+            navigate('/Shop');
+        }
+    }
+
     return(
         <div style={{backgroundColor: "#e3e3e3ff",
         display:"flex",
@@ -11,23 +27,31 @@ function SearchBar(){
         gap: '3px', 
         borderRadius: "20px", 
         padding: "5px"}}>
-            <form style={{display: "flex",  //form
-                alignItems: "center", flex: "1"}}>
-                <button style={{background: "none",         //button
-                    border: "none", 
-                    outline: "none"}}>
-                    <img src={SearchIcon} alt='search-icon'  //search icon image
-                    style={{ marginTop:"5px",
-                    height:"20px", 
-                    width: "20px"}}/>
+            <form 
+                onSubmit={handleSearch} 
+                style={{display: "flex", alignItems: "center", flex: "1"}}
+            >
+                <button 
+                    type="submit" 
+                    style={{background: "none", border: "none", outline: "none", cursor: 'pointer'}}
+                >
+                    <img src={SearchIcon} alt='search-icon' 
+                    style={{ marginTop:"5px", height:"20px", width: "20px"}}/>
                 </button>
-                <input type="text" placeholder="Search for Products..."  //input
-                style={{background: "none", 
-                    border: "none", 
-                    height: "100%",
-                    width: "100%",
-                    outline: "none",
-                    padding:"2px"}}
+                
+                <input 
+                    type="text" 
+                    placeholder="Search for Products..." 
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    style={{
+                        background: "none", 
+                        border: "none", 
+                        height: "100%",
+                        width: "100%",
+                        outline: "none",
+                        padding:"2px"
+                    }}
                 />
             </form>
         </div>
