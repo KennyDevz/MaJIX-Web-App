@@ -12,9 +12,8 @@ import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 
 // version 2.1 with dropdown and dropdown close on outside click
 function NavBar(){
-    const { user, logout } = useContext(UserContext);
+    const { user, logout, showSignIn, setShowSignIn } = useContext(UserContext);
     const [showDropDown, setShowDropDown] = useState(false)
-    const [showSignIn, setShowSignIn] = useState(false)
     const navigate = useNavigate()
     const dropdownRef = useRef(null);
 

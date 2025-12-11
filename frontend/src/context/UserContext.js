@@ -15,6 +15,9 @@ export const UserProvider = ({ children }) => {
   //   }
   // }, []);
 
+  // 1. NEW: Move the "Show Modal" state here!
+  const [showSignIn, setShowSignIn] = useState(false);
+
   // 1. CHECK SESSION ON APP LOAD
   useEffect(() => {
     const verifySession = async () => {
@@ -22,6 +25,8 @@ export const UserProvider = ({ children }) => {
         // We use relative path because baseURL is set in apiConfig
         const response = await axios.get("/api/user/auth/check-session");
         setUser(response.data);
+        // 2. NEW: Close modal automatically on successful login
+        setShowSignIn(false);
       } catch (error) {
         // If 401 (Unauthorized), user is just not logged in.
         // We don't need to alert an error, just ensure user is null.
@@ -45,7 +50,7 @@ export const UserProvider = ({ children }) => {
       // Update state
       setUser(response.data);
 
-      return { success: true };
+      return { success: true, role: response.data.role};
     } catch (error) {
       console.error("Login failed:", error);
       return {
@@ -69,7 +74,7 @@ export const UserProvider = ({ children }) => {
   };
 
   return (
-    <UserContext.Provider value={{ user, setUser, login, logout, loading }}>
+    <UserContext.Provider value={{ user, setUser, login, logout, loading, showSignIn, setShowSignIn }}>
       {!loading ? (
         children
       ) : (
