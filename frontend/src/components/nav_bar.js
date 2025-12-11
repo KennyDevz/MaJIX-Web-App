@@ -12,7 +12,7 @@ import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 
 // version 2.1 with dropdown and dropdown close on outside click
 function NavBar(){
-    const { user, setUser } = useContext(UserContext);
+    const { user, logout } = useContext(UserContext);
     const [showDropDown, setShowDropDown] = useState(false)
     const [showSignIn, setShowSignIn] = useState(false)
     const navigate = useNavigate()
@@ -43,15 +43,14 @@ function NavBar(){
         setShowSignIn(false)
     }
 
-    const handleLogout = ()=> {
-        if(window.confirm("Are you sure you want to logout?")){
-            setUser(null); 
-            localStorage.removeItem("user");
-            navigate("/",{replace: true})
-            setShowDropDown(!showDropDown)
-            alert("You have been logged out successfully!")
-        }    
-    }
+    // UPDATED: Now handles the async logout gracefully
+    const handleLogout = async () => {
+        if (window.confirm("Are you sure you want to logout?")) {
+            await logout(); // Wait for backend to clear session
+            setShowDropDown(false);
+            navigate("/", { replace: true }); // Redirect to home
+        }
+    };
 
     return(
         <div className="nav-bar" ref={dropdownRef}>
@@ -78,7 +77,12 @@ function NavBar(){
                 <div
                 onClick={() => setShowDropDown(!showDropDown)}
                 className="rounded-full bg-gray-700 flex items-center justify-center hover:bg-gray-600"
-                style={{borderRadius: '50%', cursor: 'pointer', border: '1px solid black', padding: '5px'}}
+                style={{borderRadius: '50%', cursor: 'pointer', border: '1px solid black', padding: '5px',width: '35px', // Added fixed width/height for better circle shape
+                        height: '35px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontWeight: 'bold'}}
                 >
                 {user.firstname.charAt(0).toUpperCase()}{user.lastname.charAt(0).toUpperCase()}
                 </div>
