@@ -9,6 +9,23 @@ import java.util.stream.Collectors;
 
 @Component
 public class UserMapper {
+
+    // --- ADD THIS NEW METHOD HERE ---
+    // This method figures out exactly which specific DTO to create
+    public UserDTO toDTO(User user) {
+        if (user == null) {
+            return null;
+        }
+
+        if (user instanceof Customer customer) {
+            return toCustomerDTO(customer); // Calls your existing method
+        } else if (user instanceof Admin admin) {
+            return toAdminDTO(admin);       // Calls your existing method
+        } else {
+            return toUserDTO(user);         // Calls your existing method for generic users
+        }
+    }
+
     public CustomerDTO toCustomerDTO(Customer customer) {
         if(customer == null) return null;
         CartDTO cartDTO = null;
