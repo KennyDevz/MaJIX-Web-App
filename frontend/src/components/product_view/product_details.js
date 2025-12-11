@@ -225,6 +225,7 @@ export default function ProductDetails({ product }) {
         </Stack>
 
         {/* Quantity + Add to cart */}
+        {user && (
         <Stack direction="row" spacing={2} alignItems="center">
           <Box
             sx={{
@@ -274,7 +275,7 @@ export default function ProductDetails({ product }) {
               ? "Out of Stock"
               : "Select Options"}
           </Button>
-        </Stack>
+        </Stack>)}
       </Box>
     </Box>
   );
