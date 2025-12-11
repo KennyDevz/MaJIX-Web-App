@@ -1,71 +1,97 @@
 import React from 'react';
-import { 
-  Box, Typography, Paper, Grid, 
-  Radio, RadioGroup, FormControl 
-} from '@mui/material';
-import StyledTextField from './StyledTextField'; 
+import { Box, Typography, Paper, Radio, RadioGroup, FormControlLabel } from '@mui/material';
 
-// Helper for the radio button options 
-const PaymentOption = ({ value, label }) => (
-  <Box sx={{
-    display: 'flex', alignItems: 'center', gap: 1.5, width: '30%', height: '48px', pl: 2, pr: 2, backgroundColor: '#ffffffff', borderRadius: '12px'
-  }}>
-    <Radio value={value} sx={{ p: 0, '&.Mui-checked': { color: 'black' } }} />
-    <Typography sx={{ fontFamily: 'Poppins', fontWeight: '400', fontSize: '16px', color: 'black' }}>
-      {label}
-    </Typography>
-  </Box>
+// Helper component for consistent style
+const PaymentOption = ({ value, label, icon }) => (
+  <Paper variant="outlined" sx={{ p: 2, mb: 1, display: 'flex', alignItems: 'center' }}>
+    <FormControlLabel 
+      value={value} 
+      control={<Radio />} 
+      label={<Typography fontWeight="500">{label}</Typography>} 
+      sx={{ m: 0, width: '100%' }}
+    />
+    {icon && <Box sx={{ ml: 'auto', color: 'text.secondary' }}>{icon}</Box>}
+  </Paper>
 );
 
-// 1. Accept 'paymentMethod' and 'setPaymentMethod'
-export default function PaymentMethodForm({ paymentMethod, setPaymentMethod }) {
+export default function PaymentMethodForm({ 
+  paymentMethod, 
+  setPaymentMethod, 
+  savedMethods = [], 
+  setSelectedMethodId,
+  isAddingNew = false // <--- CONTROLS THE MODE
+}) {
 
-  const handleChange = (event) => {
-    setPaymentMethod(event.target.value);
+  const handleChange = (e) => {
+    const val = e.target.value;
+    setPaymentMethod(val); 
+
+    // Only relevant for Checkout: Reset ID if they chose a generic type or COD
+    if (!isAddingNew && setSelectedMethodId) {
+        if (val === "COD" || val === "Credit Card" || val === "GCash" || val === "PayPal") {
+           setSelectedMethodId(null);
+        }
+    }
+  };
+
+  const handleSavedClick = (method) => {
+    setPaymentMethod(method.type + " " + method.identifier);
+    if (setSelectedMethodId) setSelectedMethodId(method.id);
   };
 
   return (
-    <Paper 
-      elevation={0} variant="outlined"
-      sx={{ 
-        p: '21px 25px 25px 25px', 
-        borderRadius: '20px', 
-        borderColor: 'rgba(0, 0, 0, 0.10)',
-        fontFamily: 'Poppins'
-      }}
-    >
-      <Typography variant="h5" sx={{ fontFamily: 'Poppins', fontWeight: '700', mb: 2.5 }}>
-        Payment Method
+    <Paper sx={{ p: '25px', borderRadius: '20px', fontFamily: 'Poppins' }}>
+      <Typography variant="h5" sx={{ fontWeight: '700', mb: 2.5 }}>
+        {isAddingNew ? "Select Method Type" : "Payment Method"}
       </Typography>
 
-      <FormControl component="fieldset" fullWidth>
-        <RadioGroup
-          name="payment-method"
-          value={paymentMethod} // 2. Bind value
-          onChange={handleChange} // 3. Bind onChange
-          sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, mb: 2.5 }}
-        >
-          <PaymentOption value="Credit Card" label="Credit Card" />
-          <PaymentOption value="PayPal" label="PayPal" />
-          <PaymentOption value="GCash" label="GCash" />
-          <PaymentOption value="COD" label="COD" />
-        </RadioGroup>
-      </FormControl>
-      
-      {/* Only show Credit Card fields if selected */}
-      {paymentMethod === 'Credit Card' && (
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <StyledTextField label="Card Number" placeholder="1234 5678 9012 3456" />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <StyledTextField label="Expiry Date" placeholder="MM/YY" />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <StyledTextField label="CVV" placeholder="123" />
-          </Grid>
-        </Grid>
-      )}
+      <RadioGroup name="payment-method" value={paymentMethod} onChange={handleChange}>
+        
+        {/* --- MODE A: CREATION (ADD NEW) --- */}
+        {isAddingNew && (
+            <>
+                <PaymentOption value="Credit Card" label="Credit Card" />
+                <PaymentOption value="GCash" label="GCash" />
+                <PaymentOption value="PayPal" label="PayPal" />
+            </>
+        )}
+
+        {/* --- MODE B: SELECTION (CHECKOUT) --- */}
+        {!isAddingNew && (
+            <>
+                {/* 1. SAVED METHODS */}
+                {savedMethods.map((method) => (
+                    <Paper key={method.id} variant="outlined" sx={{ p: 2, mb: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <Box display="flex" alignItems="center">
+                        <Radio 
+                            checked={paymentMethod === (method.type + " " + method.identifier)}
+                            onChange={() => handleSavedClick(method)}
+                            value={method.type + " " + method.identifier}
+                        />
+                        <Box>
+                            <Typography fontWeight="bold">{method.type}</Typography>
+                            <Typography variant="body2">{method.identifier}</Typography>
+                        </Box>
+                        </Box>
+                        <Typography variant="caption" color="text.secondary">
+                        Php {method.mockBalance?.toFixed(2)}
+                        </Typography>
+                    </Paper>
+                ))}
+                
+                {/* 2. CASH ON DELIVERY */}
+                <PaymentOption value="COD" label="Cash on Delivery" />
+                
+                {/* 3. Fallback message if list is empty */}
+                {savedMethods.length === 0 && (
+                    <Typography variant="caption" sx={{ display: 'block', mb: 2, color: 'text.secondary' }}>
+                        No saved cards found. You can pay via COD.
+                    </Typography>
+                )}
+            </>
+        )}
+
+      </RadioGroup>
     </Paper>
   );
 }
