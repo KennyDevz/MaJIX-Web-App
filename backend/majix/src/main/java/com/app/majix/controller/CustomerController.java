@@ -2,13 +2,17 @@ package com.app.majix.controller;
 
 import com.app.majix.dto.CartDTO;
 import com.app.majix.dto.CustomerDTO;
+import com.app.majix.dto.CustomerRegistrationRequest;
 import com.app.majix.entity.Cart;
 import com.app.majix.entity.Customer;
 import com.app.majix.entity.User;
 import com.app.majix.mapper.UserMapper;
 import com.app.majix.service.CustomerService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Collections;
 
 @RestController
 @RequestMapping("/api/customer")
@@ -23,16 +27,29 @@ public class CustomerController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> createCustomer(@RequestBody Customer customer){
-        // Optional: check if email already exists
-        if (customerService.findByEmail(customer.getEmail()) != null) {
-            return ResponseEntity.badRequest().body("Email is already registered");
+    public ResponseEntity<?> createCustomer(@Valid @RequestBody CustomerRegistrationRequest request){
+
+        // 1. Check for Duplicate Email
+        if (customerService.findByEmail(request.getEmail()) != null) {
+            // Return JSON format { "email": "message" } to match validation errors
+            return ResponseEntity
+                    .badRequest()
+                    .body(Collections.singletonMap("email", "Email is already registered"));
         }
 
-        Customer newCustomer = customerService.createCustomer(customer);
+        // 2. Map DTO to Entity
+        Customer newCustomerEntity = new Customer();
+        newCustomerEntity.setFirstname(request.getFirstname());
+        newCustomerEntity.setLastname(request.getLastname());
+        newCustomerEntity.setEmail(request.getEmail());
+        newCustomerEntity.setPassword(request.getPassword());
+        newCustomerEntity.setPhonenumber(request.getPhonenumber());
 
-        //convert using the mapper
-        CustomerDTO customerDTO = userMapper.toCustomerDTO(newCustomer);
+        // 3. Save
+        Customer savedCustomer = customerService.createCustomer(newCustomerEntity);
+
+        // 4. Return DTO
+        CustomerDTO customerDTO = userMapper.toCustomerDTO(savedCustomer);
         return ResponseEntity.ok(customerDTO);
     }
 
