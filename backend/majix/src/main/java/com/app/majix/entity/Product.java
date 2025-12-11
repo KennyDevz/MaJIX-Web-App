@@ -45,6 +45,27 @@ public class Product {
         return variants.stream().mapToInt(ProductVariant::getQuantityInStock).sum();
     }
 
+    // This "virtual" property will appear as "averageRating" in your JSON response
+    public Double getAverageRating() {
+        if (reviews == null || reviews.isEmpty()) {
+            return 0.0;
+        }
+
+        // Calculate the average rating
+        return reviews.stream()
+                .mapToInt(Review::getRating) // Get the rating from each review
+                .average()
+                .orElse(0.0);
+    }
+
+    // You might also want the total number of reviews to show (e.g., "4.5 stars (12 reviews)")
+    public int getReviewCount() {
+        if (reviews == null) {
+            return 0;
+        }
+        return reviews.size();
+    }
+
     // --- Getters and Setters ---
     public Long getProductId() {
         return productId;
