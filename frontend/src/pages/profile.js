@@ -5,6 +5,7 @@ import ProfileInfoForm from "../components/profile/ProfileInfoForm";
 import OrderHistory from "../components/profile/OrderHistory";
 import ReturnHistory from "../components/profile/ReturnHistory"; 
 import { UserContext } from "../context/UserContext";
+import PaymentMethod from "../components/profile/PaymentMethod";
 
 function a11yProps(index) {
   return {
@@ -77,6 +78,7 @@ export default function ProfilePage() {
           {currentTab === 0 && (
             <div style={{ display: "flex", flexDirection: "column", gap: "60px" }}>
               <ProfileInfoForm />
+              <PaymentMethod />
             </div>
           )}
         </Box>
