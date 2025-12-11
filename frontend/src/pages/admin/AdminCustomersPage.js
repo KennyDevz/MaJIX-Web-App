@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import { API_BASE_URL } from '../../apiConfig';
 import '../../styles/admin/AdminLayout.css';
 import '../../styles/admin/AdminCustomersPage.css';
@@ -46,6 +47,8 @@ export default function AdminCustomersPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+
+  const navigate = useNavigate();
 
   // Updated useEffect to fetch real data
   useEffect(() => {
@@ -137,10 +140,9 @@ export default function AdminCustomersPage() {
             </div>
 
             <div className="customer-card-footer">
-              <button className="view-details-btn">
-                View Details
-              </button>
-              <button className="view-orders-btn">
+              <button className="view-orders-btn"
+                onClick={() => navigate(`/admin/orders?email=${customer.email}`)}
+              >
                 View Orders
               </button>
             </div>
