@@ -23,7 +23,7 @@ public class Customer extends User{
     public Customer(){this.setRole("CUSTOMER");}
 
     public Customer(String email, String password, String firstname, String lastname, String phonenumber){
-        super(email, password, firstname,lastname,"CUSTOMER");
+        super(email, password, firstname,lastname,"CUSTOMER",null);
         this.phonenumber = phonenumber;
     }
 
