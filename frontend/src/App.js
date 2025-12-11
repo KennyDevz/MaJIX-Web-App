@@ -28,6 +28,8 @@ function App() {
     <Router>
       <UserProvider>
           <Routes>
+            
+                <Route path='/Unauthorized' element={<UnauthorizedPage/>}/>
             {/* --- CUSTOMER GROUP --- */}
             {/* These pages will have NavBar and Footer */}
             <Route element={<CustomerLayout />}>
@@ -41,7 +43,6 @@ function App() {
                 <Route path='/Sign-up' element={<SignUp/>}/>
                 <Route path="/Details" element={<ProductView/>}/>
                 <Route path='/AboutUs' element={<AboutUs/>}/>
-                <Route path='/Unauthorized' element={<UnauthorizedPage/>}/>
 
                 {/* --- Protected User Routes (Any logged-in user) --- */}
                 {/* We wrap the element in ProtectedRoute without specific roles */}

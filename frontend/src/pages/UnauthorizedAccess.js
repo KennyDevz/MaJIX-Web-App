@@ -11,7 +11,7 @@ export default function UnauthorizedPage() {
     return (
         <div style={{
             minHeight: '100vh',
-            backgroundImage: `linear-gradient(rgba(0, 13, 42, 0.85), rgba(0, 13, 42, 0.85)), url('https://images.unsplash.com/photo-1558882224-dda166733046?w=1200')`,
+            backgroundImage: `linear-gradient(rgba(0, 13, 42, 0.85), rgba(0, 13, 42, 0.85)), url('https://highxtar.com/wp-content/uploads/2022/10/thumb-esta-el-streetwear-pasado-de-moda.jpg')`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             display: 'flex',
