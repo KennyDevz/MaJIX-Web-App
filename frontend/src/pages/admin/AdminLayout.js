@@ -6,6 +6,9 @@ import '../../styles/admin/AdminLayout.css';
 import StatsCards from '../../components/admin/StatsCards';
 import ProductFormModal from '../../components/admin/ProductFormModal'; 
 import ProductViewModal from '../../components/admin/ProductViewModal';
+import { useNavigate} from 'react-router-dom';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { UserContext } from "../../context/UserContext"
 
 // Define the product-specific URL
 const PRODUCTS_API_URL = `${API_BASE_URL}/products`;
@@ -14,6 +17,9 @@ export default function AdminLayout() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
+
+  const { logout } = React.useContext(UserContext);
 
   // 3. Add modal state here
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -21,6 +27,15 @@ export default function AdminLayout() {
 
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [productToView, setProductToView] = useState(null);
+
+  // UPDATED: Now handles the async logout gracefully
+    const handleLogout = async () => {
+        if (window.confirm("Are you sure you want to logout?")) {
+            await logout(); // Wait for backend to clear session
+            navigate("/", { replace: true }); // Redirect to home
+        }
+    };
+
 
   // 4. Use useCallback for fetchProducts
   const fetchProducts = useCallback(async () => {
@@ -96,10 +111,15 @@ export default function AdminLayout() {
 
   return (
     <div className="admin-container">
-      <div className="admin-header" style={{textAlign: 'left'}}>
+      <div className="admin-header" style={{display: 'flex', justifyContent: 'space-between', alignContent: 'center', borderBottom: '1px solid #ccc'}}>
         <h1>MaJIX Admin</h1>
+        {/* Profile Button */}
+              <div style={{backgroundColor: '#000', display: 'flex', justifyContent: 'flex-start', alignItems: 'center', gap: '10px', border: '1px solid #000', cursor: 'pointer', padding: '0 10px',height:'fit-content', borderRadius: '5px'}} onClick={handleLogout}>
+                  <LogoutIcon style={{width: '25px', height: '25px', color: '#ffffffff'}}/>
+                  <p style={{color: '#FFF', fontWeight: "bold"}}>Logout</p>
+              </div>
       </div>
-
+      
       <StatsCards stats={stats} />
 
       {/* Navigation Tabs */}
