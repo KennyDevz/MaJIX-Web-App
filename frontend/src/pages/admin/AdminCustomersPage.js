@@ -47,27 +47,22 @@ export default function AdminCustomersPage() {
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
 
-  // TODO: Replace with actual API call when backend endpoint is ready
+  // Updated useEffect to fetch real data
   useEffect(() => {
-    setLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      setCustomers(mockCustomers);
-      setLoading(false);
-    }, 500);
-
-    // When API is ready, use this:
-    // const fetchCustomers = async () => {
-    //   try {
-    //     const response = await axios.get(`${API_BASE_URL}/customers`);
-    //     setCustomers(response.data);
-    //   } catch (e) {
-    //     setError(e.response?.data?.message || e.message);
-    //   } finally {
-    //     setLoading(false);
-    //   }
-    // };
-    // fetchCustomers();
+    const fetchCustomers = async () => {
+      setLoading(true);
+      try {
+        // This endpoint matches the AdminController we just created
+        const response = await axios.get(`${API_BASE_URL}/admin/customers`);
+        setCustomers(response.data);
+      } catch (e) {
+        console.error("Error fetching customers:", e);
+        setError("Failed to load customer data.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCustomers();
   }, []);
 
   const filteredCustomers = customers.filter(customer => {
