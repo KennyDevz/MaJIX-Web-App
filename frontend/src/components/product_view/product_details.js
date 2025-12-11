@@ -131,8 +131,8 @@ export default function ProductDetails({ product }) {
 
         {/* Rating */}
         <Stack direction="row" alignItems="center" spacing={2} mb={2}>
-          <Typography variant="body1">4.5/5</Typography>
-          <Rating name="read-only" value={4.5} precision={0.5} readOnly />
+          <Typography variant="body1">{product.averageRating || 0}/5</Typography>
+          <Rating name="read-only" value={product.averageRating} precision={0.5} readOnly />
         </Stack>
 
         {/* Price */}

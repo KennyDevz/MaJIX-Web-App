@@ -45,8 +45,8 @@ export default function ProductCard({ product }) {
           {product.name}
         </Typography>
         <Box sx={{display: "flex"}}>
-            <Rating name='read-only' value={rating} precision={.5} readOnly/>
-            <Typography gutterBottom >{rating}/5</Typography>
+            <Rating name='read-only' value={product.averageRating || 0} precision={.5} readOnly/>
+            <Typography gutterBottom >{product.averageRating || 0}/5</Typography>
         </Box>
         <Box sx={{ display: 'flex', gap: 0.5, mb: 1.5, flexWrap: 'wrap', height: '20px' }}>
           {availableColors.map((color, index) => (
